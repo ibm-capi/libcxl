@@ -19,6 +19,6 @@ endef
 endif
 
 %.o : %.c
-	$(call Q,CC, $(CC) $(CFLAGS) -c -o $@ $<, $@)
-	$(call Q,CC, $(CC) -MM $(CFLAGS) $^ > $*.d, $*.d)
+	$(call Q,CC, $(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<, $@)
+	$(call Q,CC, $(CC) -MM $(CPPFLAGS) $(CFLAGS) $^ > $*.d, $*.d)
 	$(call Q,SED, sed -i -e "s#^$(@F)#$@#" $*.d, $*.d)
