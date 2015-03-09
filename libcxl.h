@@ -18,6 +18,7 @@
 #define _LIBCXL_H
 
 #include <stdint.h>
+#include <stdio.h>
 #include <misc/cxl.h>
 
 #define CXL_KERNEL_API_VERSION 1
