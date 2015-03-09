@@ -625,13 +625,14 @@ static int
 cxl_fprint_data_storage(FILE *stream, struct cxl_event_data_storage *event)
 {
 	return fprintf(stream, "AFU Invalid memory reference: 0x%"PRIx64"\n",
-		       event->addr);
+		       (uint64_t) event->addr);
 }
 
 static int
 cxl_fprint_afu_error(FILE *stream, struct cxl_event_afu_error *event)
 {
-	return fprintf(stream, "AFU Error: 0x%"PRIx64"\n", event->error);
+	return fprintf(stream, "AFU Error: 0x%"PRIx64"\n",
+		       (uint64_t) event->error);
 }
 
 static int hexdump(FILE *stream, __u8 *addr, ssize_t size)
