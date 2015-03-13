@@ -954,6 +954,23 @@ static inline uint64_t _cxl_mmio_read64(struct cxl_afu_h *afu, uint64_t offset)
 
 #endif /* __PPC64__ */
 
+static inline void _cxl_mmio_write32(struct cxl_afu_h *afu, uint64_t offset, uint32_t data)
+{
+	__asm__ __volatile__("sync ; stw%U0%X0 %1,%0"
+			     : "=m"(*(__u64 *)(afu->mmio_addr + offset))
+			     : "r"(data));
+}
+
+static inline uint32_t _cxl_mmio_read32(struct cxl_afu_h *afu, uint64_t offset)
+{
+	uint32_t d;
+
+	__asm__ __volatile__("lwz%U1%X1 %0,%1; sync"
+			     : "=r"(d)
+			     : "m"(*(__u64 *)(afu->mmio_addr + offset)));
+	return d;
+}
+
 int cxl_mmio_write64(struct cxl_afu_h *afu, uint64_t offset, uint64_t data)
 {
 	if (!afu || !afu->mmio_addr)
@@ -1047,9 +1064,7 @@ int cxl_mmio_write32(struct cxl_afu_h *afu, uint64_t offset, uint32_t data)
 
 	if (cxl_mmio_try())
 		goto fail;
-	__asm__ __volatile__("sync ; stw%U0%X0 %1,%0"
-			     : "=m"(*(__u64 *)(afu->mmio_addr + offset))
-			     : "r"(data));
+	_cxl_mmio_write32(afu, offset, data);
 	cxl_mmio_success();
 
 	return 0;
@@ -1082,9 +1097,7 @@ int cxl_mmio_read32(struct cxl_afu_h *afu, uint64_t offset, uint32_t *data)
 
 	if (cxl_mmio_try())
 		goto fail;
-	__asm__ __volatile__("lwz%U1%X1 %0,%1; sync"
-			     : "=r"(d)
-			     : "m"(*(__u64 *)(afu->mmio_addr + offset)));
+	d = _cxl_mmio_read32(afu, offset);
 	cxl_mmio_success();
 
 	if (d == 0xffffffff)
