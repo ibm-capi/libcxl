@@ -23,6 +23,17 @@ must be a multiple of 64, lower than the MMIO size returned by
 .IR cxl_get_mmio_size ().
 The address of the mapped MMIO space is returned by
 .IR cxl_mmio_ptr ().
+.PP
+If the MMIO access fails due to an IO error, a SIGBUS may be sent to the
+application, which would ordinarily result in the process being terminated.
+libcxl provides an optional SIGBUS handler, which can be installed with
+.BR cxl_mmio_install_sigbus_handler ().
+Installing this signal handler prior to using the MMIO accessor functions will
+cause them to return -1 and set
+.I errno
+to EIO in the event of an IO error.  Additionally, if this handler has NOT been
+installed, the cxl_mmio_read* functions will raise a SIGBUS in the event that
+they detect an IO error due to a read of all F's for consistency.
 .SH RETURN VALUE
 On success, 0 is returned.
 On error, \-1 is returned and
@@ -32,9 +43,15 @@ is set appropriately.
 .TP
 .B EINVAL
 Invalid argument value, or unmapped MMIO space.
+.TP
+.B EIO
+An unrecoverable error (
+.BR cxl_mmio_install_sigbus_handler ()
+must have been previously called)
 .SH SEE ALSO
 .BR cxl (3),
 .BR cxl_get_mmio_size (3),
+.BR cxl_mmio_install_sigbus_handler (3),
 .BR cxl_mmio_map (3),
 .BR cxl_mmio_ptr (3),
 .BR cxl_mmio_read32 (3),

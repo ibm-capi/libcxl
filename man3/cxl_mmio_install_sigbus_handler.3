@@ -1,0 +1,52 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_MMIO_INSTALL_SIGBUS_HANDLER 3 2015-03-30 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_mmio_install_sigbus_handler \- install the libcxl SIGBUS handler to catch MMIO access errors
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_mmio_install_sigbus_handler();"
+.SH DESCRIPTION
+.BR cxl_mmio_install_sigbus_handler ()
+installs the libcxl SIGBUS handler, which changes the behaviour of
+.BR cxl_mmio_read32 (),
+.BR cxl_mmio_read64 (),
+.BR cxl_mmio_write32 ()
+and
+.BR cxl_mmio_write64 ()
+on IO errors. If a SIGBUS is received from the kernel during one of these calls
+the libcxl SIGBUS handler will catch it and cause these calls to return -1 and
+set errno to EIO.
+
+If the libcxl SIGBUS handler has not been installed before these calls are
+made (and the application has not installed it's own handler), the SIGBUS from
+the kernel would terminate the program, which may be preferable in many cases
+for simplicity.
+
+Additionally, if the handler has not been installed and the cxl_mmio_read*
+calls detect an error due to a read of all F's, they will themselves raise a
+SIGBUS to terminate the program. This simplifies handling of IO errors for the
+application as it needs to either install the sigbus handler and be prepared to
+handle errors from the MMIO accessor functions, or treat any such error as
+fatal and receive a SIGBUS.
+
+The libcxl SIGBUS handler can chain to a handler installed by the application
+prior to calling
+.BR cxl_mmio_install_sigbus_handler().
+If the handler is invoked and libcxl determines that the signal was not due to
+an IO error from a CXL MMIO access, it will call any SIGBUS handler that was
+previously installed. If the handler had previously been set to SIG_IGN it will
+ignore the signal and if it had been set to SIG_DFL it will remove itself and
+re-raise the signal, thereby terminating the program.
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_mmio_read32 (3),
+.BR cxl_mmio_read64 (3),
+.BR cxl_mmio_write32 (3),
+.BR cxl_mmio_write64 (3)
