@@ -6,8 +6,13 @@ CFLAGS += -I include
 
 all: include/misc/cxl.h libcxl.so libcxl.a
 
+CHECK_HEADER = $(shell echo \\\#include $(1) | \
+                 $(CC) $(CFLAGS) -E - > /dev/null 2>&1 && echo y || echo n)
+
 include/misc/cxl.h:
+ifeq ($(call CHECK_HEADER,"<misc/cxl.h>"),n)
 	$(call Q,WGET include/misc/cxl.h, wget -P include/misc -q http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h)
+endif
 
 libcxl.o libcxl_sysfs.o : CFLAGS += -fPIC
 
