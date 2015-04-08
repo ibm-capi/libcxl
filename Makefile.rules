@@ -1,0 +1,24 @@
+# Basic makefile rules
+-include $(OBJS:.o=.d)
+
+ifdef V
+  VERBOSE:= $(V)
+else
+  VERBOSE:= 0
+endif
+
+ifeq ($(VERBOSE),1)
+define Q
+  $(2)
+endef
+else
+define Q
+  @/bin/echo -e "	[$1]\t$(3)"
+  @$(2)
+endef
+endif
+
+%.o : %.c
+	$(call Q,CC, $(CC) $(CFLAGS) -c -o $@ $<, $@)
+	$(call Q,CC, $(CC) -MM $(CFLAGS) $^ > $*.d, $*.d)
+	$(call Q,SED, sed -i -e "s#^$(@F)#$@#" $*.d, $*.d)

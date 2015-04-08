@@ -1,0 +1,63 @@
+LIBCXL_1 {
+	global:
+		cxl_adapter_next;
+		cxl_adapter_dev_name;
+		cxl_adapter_free;
+
+		cxl_adapter_afu_next;
+		cxl_afu_next;
+		cxl_afu_dev_name;
+
+		cxl_afu_open_dev;
+		cxl_afu_open_h;
+		cxl_afu_fd_to_h;
+		cxl_afu_free;
+		cxl_afu_opened;
+
+		cxl_afu_attach_full;
+		cxl_afu_attach;
+
+		cxl_afu_get_process_element;
+
+		cxl_afu_fd;
+
+		cxl_afu_sysfs_pci;
+
+		cxl_get_api_version;
+		cxl_get_api_version_compatible;
+		cxl_get_irqs_max;
+		cxl_set_irqs_max;
+		cxl_get_irqs_min;
+		cxl_get_mmio_size;
+		cxl_get_mode;
+		cxl_set_mode;
+		cxl_get_modes_supported;
+		cxl_get_prefault_mode;
+		cxl_set_prefault_mode;
+		cxl_get_pp_mmio_len;
+		cxl_get_pp_mmio_off;
+		cxl_get_base_image;
+		cxl_get_caia_version;
+		cxl_get_image_loaded;
+		cxl_get_psl_revision;
+
+		cxl_pending_event;
+		cxl_read_event;
+		cxl_read_expected_event;
+
+		cxl_fprint_event;
+		cxl_fprint_unknown_event;
+
+		cxl_mmio_map;
+		cxl_mmio_unmap;
+		cxl_mmio_ptr;
+		cxl_mmio_write64;
+		cxl_mmio_read64;
+		cxl_mmio_write32;
+		cxl_mmio_read32;
+
+		cxl_mmio_install_sigbus_handler;
+
+	local:
+		*;
+};
