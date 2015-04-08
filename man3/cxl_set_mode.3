@@ -1,0 +1,47 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_SET_MODE 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_set_mode \- set the programming mode of an AFU
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_set_mode(struct cxl_afu_h"
+.BI * afu ", long " value );
+.SH DESCRIPTION
+.BR cxl_set_mode ()
+sets the programming mode of
+.I afu
+to
+.IR value .
+.I value
+must be one of the modes returned by
+.BR cxl_get_modes_supported ():
+.B CXL_MODE_DEDICATED
+or
+.BR CXL_MODE_DIRECTED .
+Mode will be changed provided that no user contexts
+are attached.
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EBUSY
+User context attached.
+.TP
+.B EINVAL
+Invalid argument value.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_adapter_afu_next (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_attach_full (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_next (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_get_mode (3),
+.BR cxl_get_modes_supported (3)

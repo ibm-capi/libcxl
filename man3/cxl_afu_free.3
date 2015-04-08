@@ -1,0 +1,25 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_AFU_FREE 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_afu_free \- free the data structures of an AFU handle
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "void cxl_afu_free(struct cxl_afu_h"
+.BI * afu );
+.SH DESCRIPTION
+.BR cxl_afu_free ()
+frees the data structures and memory buffers of
+.IR afu .
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_adapter_afu_next (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_attach_full (3),
+.BR cxl_afu_fd (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_next (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_afu_opened (3)

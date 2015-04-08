@@ -1,0 +1,74 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_AFU_ATTACH_FULL 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_afu_attach_full \- attach the calling process's memory to an open AFU
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_afu_attach_full(struct cxl_afu_h"
+.BI * afu ", __u64 " wed ,
+.BI "__u16 " num_interrupts ", __u64 " amr );
+.SH DESCRIPTION
+.BR cxl_afu_attach_full ()
+attaches a context of
+.I afu
+to the current process, specifies
+.I wed
+as the initial work element descriptor, requests
+.IR num_interrupts ,
+sets the authority mask register
+.IR amr ,
+and starts the AFU context.
+.PP
+On success, all memory mapped into this process is accessible to the
+AFU context using the same effective addresses.
+No additional calls are required to map/unmap memory.
+The AFU memory context will be updated as userspace allocates and
+frees memory.
+.PP
+The work element descriptor
+.wed
+is a 64-bit argument defined by the AFU.
+Typically this is an effective address pointing to an AFU specific
+structure describing what work to perform.
+.PP
+The number of requested userspace interrupts
+.I num_interrupts
+must be in the range defined by
+.BR cxl_get_irqs_min ()
+and
+.BR cxl_get_irqs_max ().
+.PP
+The authority mask register
+.I amr
+is the same as the powerpc AMR.
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value, or AFU not opened.
+.TP
+.B ENOMEM
+Not enough memory.
+.TP
+.B ENOSPC
+Not enough interrupts available.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_free (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_opened (3),
+.BR cxl_get_irqs_max (3),
+.BR cxl_get_irqs_min (3),
+.BR cxl_get_prefault_mode (3),
+.BR cxl_mmio_map (3),
+.BR cxl_set_irqs_max (3),
+.BR cxl_set_mode (3),
+.BR cxl_set_prefault_mode (3)

@@ -1,0 +1,37 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_AFU_OPENED 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_afu_opened \- return whether an AFU handle is opened
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_afu_opened(struct cxl_afu_h"
+.BI * afu );
+.SH DESCRIPTION
+.BR cxl_afu_opened ()
+returns 1 if
+.I afu
+is open, or else 0.
+.SH RETURN VALUE
+On success, 0 or 1 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_attach_full (3),
+.BR cxl_afu_dev_name (3),
+.BR cxl_afu_fd (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_free (3),
+.BR cxl_afu_get_process_element (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_read_event (3),
+.BR cxl_read_expected_event (3)

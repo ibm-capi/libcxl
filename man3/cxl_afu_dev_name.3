@@ -1,0 +1,47 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_AFU_DEV_NAME 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_afu_dev_name \- return the AFU device name
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "char *cxl_afu_dev_name(struct cxl_afu_h"
+.BI * afu );
+.SH DESCRIPTION
+.BR cxl_afu_dev_name ()
+returns the basename of the device associated to
+.IR afu .
+The AFU devices of the CXL adapter
+.BI card <i>
+are named
+.BI afu <i> .0 \fR,
+.BI afu <i> .1 \fR,
+etc.
+AFUs opened in dedicated process mode, or AFU directed mode
+in master or slave context, are respectly suffixed with
+.BR d ,
+.BR m ,
+and
+.BR s .
+.SH FILES
+.TP
+.BI /dev/cxl/afu <i> . <j> d
+AFU device in dedicated process mode.
+.TP
+.BI /dev/cxl/afu <i> . <j> m
+AFU device in AFU directed mode, master context.
+.TP
+.BI /dev/cxl/afu <i> . <j> s
+AFU device in AFU directed mode, slave context.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_adapter_afu_next (3),
+.BR cxl_afu_fd (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_get_process_element (3),
+.BR cxl_afu_next (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_afu_opened (3),
+.BR cxl_afu_sysfs_pci (3)

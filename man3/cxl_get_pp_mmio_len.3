@@ -1,0 +1,41 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_GET_PP_MMIO_LEN 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_get_pp_mmio_len \- get the per-process MMIO space length
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_get_pp_mmio_len(struct cxl_afu_h"
+.BI * afu ", long *" valp );
+.SH DESCRIPTION
+.BR cxl_get_pp_mmio_len ()
+copies the per-process MMIO space length of
+.I afu
+to the long integer pointed to by
+.IR valp .
+The AFU must be opened in AFU directed mode, master context.
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value.
+.TP
+.B ENODEV
+Invalid AFU device.
+.TP
+.B ENOMEM
+Insufficient memory.
+.SH FILES
+.TP
+.BI /dev/cxl/afu <i> . <j> m
+AFU device in directed mode, master context.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_adapter_afu_next (3),
+.BR cxl_afu_next (3),
+.BR cxl_get_pp_mmio_off (3)

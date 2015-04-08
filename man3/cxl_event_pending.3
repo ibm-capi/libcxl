@@ -1,0 +1,30 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_EVENT_PENDING 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_event_pending \- return whether a CXL event is pending
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_event_pending(struct cxl_afu_h"
+.BI * afu );
+.SH DESCRIPTION
+.BR cxl_event_pending ()
+returns 1 if a CXL event can be read from
+.IR afu ,
+or else 0.
+.SH RETURN VALUE
+On success, 0 or 1 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_fprint_event (3),
+.BR cxl_fprint_unknown_event (3),
+.BR cxl_read_event (3),
+.BR cxl_read_expected_event (3)

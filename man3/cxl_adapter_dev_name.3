@@ -1,0 +1,21 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_ADAPTER_DEV_NAME 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_adapter_dev_name \- return the CXL adapter device name
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "char *cxl_adapter_dev_name(struct cxl_adapter_h"
+.BI * adapter );
+.SH DESCRIPTION
+.BR cxl_adapter_dev_name ()
+returns the basename of the device associated to the CXL adapter handle
+.IR adapter .
+The devices of the CXL adapters are named
+.BR card0 ,
+.BR card1 ,
+etc.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_adapter_next (3)

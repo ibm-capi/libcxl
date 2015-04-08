@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# man2txt - format a man page into plain text
+
+tbl | groff -man -I.. -Tascii |
+sed -e 's/\(.\)\o010\1/\1/g' -e 's/_\o010//g' # a 'colcrt -' that works !

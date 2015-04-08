@@ -1,0 +1,35 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_FPRINT_UNKNOWN_EVENT 3 2015-02-27 "" "CXL Manual"
+.SH NAME
+cxl_fprint_unknown_event \- print out a hex dump of a raw CXL event for debugging
+.SH SYNOPSIS
+.B #include <stdio.h>
+.br
+.B #include <libcxl.h>
+.PP
+.BI "int cxl_fprint_unknown_event(FILE *" stream , 
+.BI "struct cxl_event *" event );
+.SH DESCRIPTION
+.BR cxl_fprint_unknown_event ()
+prints out a hex dump of the raw CXL
+.I event
+to the file
+.IR stream .
+.SH RETURN VALUE
+On success, the number of bytes written to
+.I stream
+is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_fprint_event (3),
+.BR cxl_event_pending (3),
+.BR cxl_read_event (3),
+.BR cxl_read_expected_event (3)

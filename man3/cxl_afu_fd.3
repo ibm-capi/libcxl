@@ -1,0 +1,25 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_AFU_FD 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_afu_fd \- return the file descriptor of an AFU handle
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_afu_fd(struct cxl_afu_h"
+.BI * afu );
+.SH DESCRIPTION
+.BR cxl_afu_fd ()
+returns the file descriptor of an open AFU,
+or \-1 if
+.I afu
+has not been opened.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_dev_name (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_free (3),
+.BR cxl_afu_get_process_element (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_afu_opened (3)

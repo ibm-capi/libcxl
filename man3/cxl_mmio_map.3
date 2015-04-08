@@ -1,0 +1,71 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_MMIO_MAP 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_mmio_map \- map the per-process Problem State Area of an AFU to memory
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_mmio_map(struct cxl_afu_h"
+.BI * afu ", __u32 " flags );
+.SH DESCRIPTION
+.BR cxl_mmio_map ()
+maps the per-process Problem State Area of
+.I afu
+to the current process memory, and sets endianness according to
+.IR flags :
+.BR CXL_MMIO_BIG_ENDIAN ,
+.B CXL_MMIO_HOST_ENDIAN
+or
+.BR CXL_MMIO_LITTLE_ENDIAN .
+.PP
+The size and contents of this area are specific each AFU.
+The size can be discovered with
+.BR cxl_get_mmio_size ().
+.PP
+In AFU directed mode, master contexts are allowed to map all of
+the MMIO space and slave contexts are allowed to only map the per
+process MMIO space associated with the context.
+In dedicated process mode the entire MMIO space can always be mapped.
+.PP
+Only 32 and 64-bit accesses are supported by POWER8.
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value, or AFU does not support MMIO space.
+.TP
+.B EIO
+AFU context is not attached.
+.TP
+.B ENODEV
+AFU not opened, or missing flags.
+.TP
+.B ENOMEM
+Insufficient memory.
+.SH FILES
+.TP
+.BI /dev/cxl/afu <i> . <j> d
+AFU device in dedicated process mode.
+.TP
+.BI /dev/cxl/afu <i> . <j> m
+AFU device in AFU directed mode, master context.
+.TP
+.BI /dev/cxl/afu <i> . <j> s
+AFU device in AFU directed mode, slave context.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_attach_full (3),
+.BR cxl_get_mmio_size (3),
+.BR cxl_mmio_ptr (3),
+.BR cxl_mmio_read32 (3),
+.BR cxl_mmio_read64 (3),
+.BR cxl_mmio_unmap (3),
+.BR cxl_mmio_write32 (3),
+.BR cxl_mmio_write64 (3),
+.BR mmap (3)

@@ -1,0 +1,45 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_FPRINT_EVENT 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_fprint_event \- print out a description of a CXL event for debugging
+.SH SYNOPSIS
+.B #include <stdio.h>
+.br
+.B #include <libcxl.h>
+.PP
+.BI "int cxl_fprint_event(FILE *" stream , 
+.BI "struct cxl_event *" event );
+.SH DESCRIPTION
+.BR cxl_fprint_event ()
+prints out a description of the CXL
+.I event
+to the file
+.IR stream .
+.PP
+The description is based on the event type.
+If the type is unknown, then
+.BR cxl_fprint_event ()
+calls
+.BR cxl_fprint_unknown_event ()
+instead, and prints out a hex dump of the raw event.
+.SH RETURN VALUE
+On success, the number of bytes written to
+.I stream
+is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value.
+.TP
+.B ENODATA
+No data available.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_fprint_unknown_event (3),
+.BR cxl_event_pending (3),
+.BR cxl_read_event (3),
+.BR cxl_read_expected_event (3)

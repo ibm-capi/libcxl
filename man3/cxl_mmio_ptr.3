@@ -1,0 +1,37 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_MMIO_PTR 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_mmio_ptr \- return the address of the mapped AFU Problem State Area
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_mmio_ptr(struct cxl_afu_h"
+.BI * afu ", void **" mmio_ptr );
+.SH DESCRIPTION
+.BR cxl_mmio_ptr ()
+copies the address of the mapped Problem State Area of
+.I afu
+to the pointer
+.IR mmio_ptr .
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value, or MMIO space not mapped.
+.TP
+.B ENOMEM
+Insufficient memory.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_get_mmio_size (3),
+.BR cxl_mmio_map (3),
+.BR cxl_mmio_read32 (3),
+.BR cxl_mmio_read64 (3),
+.BR cxl_mmio_unmap (3),
+.BR cxl_mmio_write32 (3),
+.BR cxl_mmio_write64 (3)

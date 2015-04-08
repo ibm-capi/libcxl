@@ -1,0 +1,37 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_GET_CAIA_VERSION 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_get_caia_version \- get the CAIA version supported by a CXL adapter
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_get_caia_version(struct cxl_adapter_h"
+.BI * adapter ", long *" majorp ,
+.BI "long *" minorp );
+.SH DESCRIPTION
+.BR cxl_get_caia_version ()
+copies the major and minor values of the CAIA version implemented on
+.I adapter
+to the long integers pointed to by
+.I majorp
+and
+.IR minorp .
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value.
+.TP
+.B ENOMEM
+Insufficient memory.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_adapter_next (3),
+.BR cxl_get_base_image (3),
+.BR cxl_get_image_loaded (3),
+.BR cxl_get_psl_revision (3)

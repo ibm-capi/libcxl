@@ -1,0 +1,43 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_MMIO_READ32 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_mmio_read32 \- read a 32-bit word from the mapped AFU Problem State Area
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_mmio_read32(struct cxl_afu_h "
+.BI * afu ", uint64_t " offset ,
+.BI "uint32_t *" data );
+.SH DESCRIPTION
+.BR cxl_mmio_read32 ()
+reads the 32-bit word at
+.I offset
+from the address of the mapped Problem State Area of
+.IR afu ,
+and copies its value to the word pointed to by
+.IR data .
+.PP
+.I offset
+must be a multiple of 32, lower than the MMIO size returned by
+.IR cxl_get_mmio_size ().
+The address of the mapped MMIO space is returned by
+.IR cxl_mmio_ptr ().
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value, or unmapped MMIO space.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_get_mmio_size (3),
+.BR cxl_mmio_map (3),
+.BR cxl_mmio_ptr (3),
+.BR cxl_mmio_read64 (3),
+.BR cxl_mmio_unmap (3),
+.BR cxl_mmio_write32 (3),
+.BR cxl_mmio_write64 (3)

@@ -1,0 +1,73 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_AFU_FD_TO_H 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_afu_fd_to_h \- create an AFU handle from the file descriptor of an already open AFU
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "struct cxl_afu_h cxl_afu_fd_to_h(int"
+.IB fd );
+.SH DESCRIPTION
+.BR cxl_afu_fd_to_h ()
+returns an AFU handle from the already open AFU device associated to the
+file descriptor
+.IR fd .
+.PP
+A dedicated process mode AFU only has one context and only allows
+the device to be opened once.
+An AFU directed mode AFU can have many contexts, the device can
+be opened once for each context that is available.
+.SH RETURN VALUE
+On success, an AFU handle is returned.
+On error, NULL is returned, and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EBADF
+Bad file descriptor.
+.TP
+.B ENODEV
+Kernel does not support CXL devices, or device is not an AFU.
+.TP
+.B ENOMEM
+Insufficient memory.
+.TP
+.B ENOSPC
+No AFU context available.
+.TP
+.B EPROTO
+Unsupported kernel CXL API version.
+.SH FILES
+.TP
+.BI /dev/cxl/afu <i> . <j> d
+AFU device in dedicated process mode.
+.TP
+.BI /dev/cxl/afu <i> . <j> m
+AFU device in AFU directed mode, master context.
+.TP
+.BI /dev/cxl/afu <i> . <j> s
+AFU device in AFU directed mode, slave context.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_attach_full (3),
+.BR cxl_afu_dev_name (3),
+.BR cxl_afu_fd (3),
+.BR cxl_afu_free (3),
+.BR cxl_afu_get_process_element (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_afu_opened (3),
+.BR cxl_get_api_version (3),
+.BR cxl_get_api_version_compatible (3),
+.BR cxl_get_cr_class (3),
+.BR cxl_get_cr_device (3),
+.BR cxl_get_cr_vendor (3),
+.BR cxl_get_mode (3),
+.BR cxl_get_modes_supported (3),
+.BR cxl_read_event (3),
+.BR cxl_read_expected_event (3),
+.BR cxl_set_mode (3),
+.BR open (2)

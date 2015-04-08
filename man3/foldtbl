@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# foldtbl - fold long table lines
+
+awk 'BEGIN {
+	sep = "       "
+	for (i = 0; i < 72; i++)
+		sep = sep "-"
+}
+length() > 79 && $1 ~ /^-/ {
+	print sep
+	next
+}
+length() > 79 {
+	line1 = $0
+	line2 = ""
+	tab = index($0, " " $2 " ")
+	len = length()
+	# move words exceeding column 78 to line2
+	while (len > 79) {
+		len = len - length($NF) -1
+		line2 = " " $NF line2
+		NF = NF - 1
+	}
+	# prepend initial white spaces to line2
+	for (i = 1; i < tab; i++)
+		line2 = " " line2
+	# print truncated line1 and line2
+	print substr(line1, 1, len)
+	print line2
+	next
+}
+{ print }'

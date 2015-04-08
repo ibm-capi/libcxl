@@ -1,0 +1,231 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl \- Coherent Accelerator Interface (CXL) library functions
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.SH DESCRIPTION
+.SS Introduction
+The coherent accelerator interface is designed to allow the
+coherent connection of accelerators (FPGAs and other devices)
+to a POWER system.
+Coherent in this context means that the accelerator and CPUs can
+both access system memory directly and with the same effective
+addresses.
+IBM refers to this as the Coherent Accelerator Processor Interface
+(CAPI).
+In the Linux world it is referred to by the name CXL to
+avoid confusion with the ISDN CAPI subsystem.
+.PP
+The Linux kernel interacts with the device POWER Service Layer (PSL).
+Userland interacts with the device Accelerator Function Unit (AFU).
+See the Linux kernel source file
+.B Documentation/powerpc/cxl.txt
+for a detailed description of the coherent accelerator interface.
+.PP
+The CXL library provides a userland API to coherently attached
+devices.
+CXL devices can be enumerated.
+Their capabilities can be queried.
+AFUs can be opened, attached to the current process, and started.
+Jobs, described by AFU specific Work Element Descriptors (WEDs),
+can be submitted and executed by AFUs.
+AFU MMIO space can be mapped into the current process memory, and
+AFUs can be configured and controlled via MMIO reads and writes.
+.SS Constant macros
+.TS
+;
+lb lb
+lb l.
+Macro	Description
+_
+CXL_DEV_DIR	CXL device directory pathname
+CXL_KERNEL_API_VERSION	maximum supported CXL kernel API compatible version
+CXL_MMIO_BIG_ENDIAN	MMIO big endian flag
+CXL_MMIO_HOST_ENDIAN	MMIO host endian flag
+CXL_MMIO_LITTLE_ENDIAN	MMIO little endian flag
+CXL_MODE_DEDICATED	dedicated process mode flag
+CXL_MODE_DIRECTED	AFU directed mode flag
+CXL_SYSFS_CLASS	sysfs CXL class pathname
+
+.TE
+.SS Enumeration macros
+.TS
+;
+lb lb
+lb l.
+Macro	Description
+_
+cxl_for_each_adapter	enumerate the available CXL adapters
+cxl_for_each_adapter_afu	enumerate the AFUs of a CXL adapter
+cxl_for_each_afu	enumerate the available AFUs
+.TE
+.SS Enumeration functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_adapter_dev_name	return the CXL adapter device name
+cxl_adapter_free	free the CXL adapter data structures
+cxl_adapter_next	iterate to the next CXL adapter
+cxl_adapter_afu_next	iterate to the next AFU of a CXL adapter
+cxl_afu_dev_name	return the AFU device name
+cxl_afu_next	iterate to the next AFU
+.TE
+.SS Open AFU functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_afu_fd	return the file descriptor of an AFU handle
+cxl_afu_fd_to_h	create an AFU handle from the file descriptor of an already open AFU
+cxl_afu_free	free the data structures of an AFU handle
+cxl_afu_get_process_element	get the process element associated with an open AFU handle
+cxl_afu_open_dev	open an AFU by device name
+cxl_afu_open_h	open an AFU by AFU handle
+cxl_afu_opened	return whether an AFU handle is opened
+.TE
+.SS Attach AFU Context functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_afu_attach_full	attach the calling process's memory to an open AFU
+cxl_afu_attach	attach the calling process's memory to an open AFU
+.TE
+.SS CXL Adapter Sysfs Helper functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_get_base_image	get the revision level of the initial PSL image loaded on the CXL device
+cxl_get_caia_version	get the CAIA version supported by a CXL adapter
+cxl_get_image_loaded	returns which of the user and factory PSL images is currently loaded on the CXL device
+cxl_get_psl_revision	get the revision level of the current PSL image loaded on the CXL device
+.TE
+.SS AFU Directed Master Context Sysfs Helper functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_get_mmio_size	get the total size of the MMIO space of an AFU, including all per-process areas
+cxl_get_pp_mmio_len	get the per-process MMIO space length
+cxl_get_pp_mmio_off	get the per-process MMIO space offset
+.TE
+.SS AFU Context Sysfs Helper functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_afu_sysfs_pci	get the sysfs path to the PCI device corresponding with an AFU
+cxl_get_mmio_size	get the size of the MMIO space available to a non-master process
+cxl_get_mode	get the current programming mode of an AFU
+cxl_get_modes_supported	get the programming modes supported by an AFU
+cxl_get_prefault_mode	get the mode for prefaulting segments
+cxl_get_api_version	get the version of the kernel CXL API
+cxl_get_api_version_compatible	get the lowest CXL API version compatible with the kernel
+cxl_get_cr_class	get the class code out of an AFU configuration record
+cxl_get_cr_device	get the device ID out of an AFU configuration record
+cxl_get_cr_vendor	get the vendor ID out of an AFU configuration record
+cxl_get_irqs_max	get the maximum number of AFU interrupts available to a context,
+	if it was the only context running
+cxl_get_irqs_min	get the minimum number of AFU interrupts required for each context
+cxl_set_irqs_max	administratively restrict the maximum number of AFU interrupts
+	that can be used by a single context
+cxl_set_mode	set the programming mode of an AFU
+cxl_set_prefault_mode	set the mode for prefaulting segments
+.TE
+.SS Events functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_fprint_event	print out a description of a CXL event for debugging
+cxl_fprint_unknown_event	print out a hex dump of a raw CXL event for debugging
+cxl_event_pending	return whether a CXL event is pending
+cxl_read_event	read one CXL event from an AFU
+cxl_read_expected_event	read one CXL event from an AFU, and treat it as a failure,
+	if it did not match an expected event
+.TE
+.SS AFU MMIO functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_mmio_map	map the per-process Problem State Area of an AFU to memory
+cxl_mmio_ptr	return the address of the mapped AFU Problem State Area
+cxl_mmio_read32	read a 32-bit word from the mapped AFU Problem State Area
+cxl_mmio_read64	read a 64-bit word from the mapped AFU Problem State Area
+cxl_mmio_unmap	unmap an AFU Problem State Area
+cxl_mmio_write32	write a 32-bit word to the mapped AFU Problem State Area
+cxl_mmio_write64	write a 32-bit word to the mapped AFU Problem State Area
+.TE
+.SH SEE ALSO
+.BR cxl_adapter_afu_next (3),
+.BR cxl_adapter_dev_name (3),
+.BR cxl_adapter_free (3),
+.BR cxl_adapter_next (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_attach_full (3),
+.BR cxl_afu_dev_name (3),
+.BR cxl_afu_fd (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_free (3),
+.BR cxl_afu_get_process_element (3),
+.BR cxl_afu_next (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_afu_opened (3),
+.BR cxl_afu_sysfs_pci (3),
+.BR cxl_for_each_adapter (3),
+.BR cxl_for_each_adapter_afu (3),
+.BR cxl_for_each_afu (3),
+.BR cxl_fprint_event (3),
+.BR cxl_fprint_unknown_event (3),
+.BR cxl_get_api_version (3),
+.BR cxl_get_api_version_compatible (3),
+.BR cxl_get_base_image (3),
+.BR cxl_get_caia_version (3),
+.BR cxl_get_cr_class (3),
+.BR cxl_get_cr_device (3),
+.BR cxl_get_cr_vendor (3),
+.BR cxl_get_image_loaded (3),
+.BR cxl_get_irqs_max (3),
+.BR cxl_get_irqs_min (3),
+.BR cxl_get_mmio_size (3),
+.BR cxl_get_mode (3),
+.BR cxl_get_modes_supported (3),
+.BR cxl_get_pp_mmio_len (3),
+.BR cxl_get_pp_mmio_off (3),
+.BR cxl_get_prefault_mode (3),
+.BR cxl_get_psl_revision (3),
+.BR cxl_mmio_map (3),
+.BR cxl_mmio_ptr (3),
+.BR cxl_mmio_rea (3),2.3
+.BR cxl_mmio_read64 (3),
+.BR cxl_mmio_unmap (3),
+.BR cxl_mmio_writ (3),2.3
+.BR cxl_mmio_write64 (3),
+.BR cxl_event_pending (3),
+.BR cxl_read_event (3),
+.BR cxl_read_expected_event (3),
+.BR cxl_set_irqs_max (3),
+.BR cxl_set_mode (3),
+.BR cxl_set_prefault_mode (3)

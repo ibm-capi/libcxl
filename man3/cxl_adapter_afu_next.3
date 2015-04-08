@@ -1,0 +1,71 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_ADAPTER_AFU_NEXT 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_adapter_afu_next \- iterate to the next AFU of a CXL adapter
+.PP
+cxl_for_each_adapter_afu \- iteration macro
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "struct cxl_afu_h *cxl_adapter_afu_next(struct cxl_adapter_h"
+.BI * adapter ", struct cxl_afu_h *" afu );
+.SH DESCRIPTION
+.BR cxl_adapter_afu_next ()
+returns an AFU handle describing the next AFU of the CXL
+.IR adapter .
+.PP
+When
+.I afu
+is NULL, then an AFU handle is allocated, and the first available
+AFU of
+.I adapter
+is returned.
+.PP
+When
+.I afu
+is the last AFU of the current
+.IR adapter ,
+then the AFU handle is freed,
+.I errno
+is set to zero, and NULL is returned.
+Alternatively, the AFU handle can be freed explicitly with
+.BR cxl_afu_free ().
+.SH RETURN VALUE
+On success, an AFU handle is returned, or NULL is returned and
+.I errno
+is set to zero.
+On error, NULL is returned, and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B ENODEV
+Unsupported kernel CXL API.
+.TP
+.B ENOMEM
+Insufficient memory.
+.SH EXAMPLE
+The CXL library provides the following macro to enumerate the
+AFUs of a CXL adapter:
+.PP
+.nf
+    #define cxl_for_each_adapter_afu(adapter, afu) \\
+        for (afu = cxl_adapter_afu_next(adapter, NULL); afu; \\
+             afu = cxl_adapter_afu_next(NULL, afu))
+.fi
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_adapter_next (3),
+.BR cxl_afu_dev_name (3),
+.BR cxl_afu_free (3),
+.BR cxl_afu_next (3),
+.BR cxl_afu_sysfs_pci (3),
+.BR cxl_get_mmio_size (3),
+.BR cxl_get_mode (3),
+.BR cxl_get_modes_supported (3),
+.BR cxl_get_pp_mmio_len (3),
+.BR cxl_get_pp_mmio_off (3),
+.BR cxl_get_prefault_mode (3),
+.BR cxl_set_mode (3),
+.BR cxl_set_prefault_mode (3)

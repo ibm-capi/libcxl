@@ -1,0 +1,77 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_READ_EXPECTED_EVENT 3 2015-02-27 "" "CXL Manual"
+.SH NAME
+cxl_read_expected_event \- read one CXL event from an AFU, and treat it as a failure, if it did not match an expected event
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.BI "int cxl_read_expected_event(struct cxl_afu_h *" afu ,
+.BI "struct cxl_event *" event ", __u32 " type ,
+.BI "__u16 " irq );
+.SH DESCRIPTION
+.BR cxl_read_expected_event ()
+reads one CXL event from
+.IR afu ,
+when an event of
+.I type
+is expected,
+and copies it to the structure pointed to by
+.IR event .
+For AFU interrupts, the expected AFU interrupt number
+.I irq
+may also be supplied (0 will accept any AFU interrupt).
+.SH RETURN VALUE
+On success, 0 is returned if the read event was of the expected type
+and (if applicable) AFU interrupt number.
+If the event did not match the type and interrupt, -1 is returned.
+.PP
+On error, \-2 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EAGAIN
+AFU device opened with
+.BR O_NONBLOCK ,
+and no data immediately available.
+.TP
+.B EINTR
+Interrupted
+.BR read ()
+system call.
+.TP
+.B EINVAL
+Invalid argument value, or AFU not opened.
+.TP
+.B EIO
+Unrecoverable error.
+.TP
+.B ENODATA
+No data returned by
+.BR read ().
+.TP
+.B ENOMEM
+Insufficient memory.
+.SH FILES
+.TP
+.BI /dev/cxl/afu <i> . <j> d
+AFU device in dedicated process mode.
+.TP
+.BI /dev/cxl/afu <i> . <j> m
+AFU device in AFU directed mode, master context.
+.TP
+.BI /dev/cxl/afu <i> . <j> s
+AFU device in AFU directed mode, slave context.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_open_h (3),
+.BR cxl_afu_opened (3),
+.BR cxl_fprint_event (3),
+.BR cxl_fprint_unknown_event (3),
+.BR cxl_event_pending (3),
+.BR cxl_read_event (3),
+.BR open (2),
+.BR read (2)
