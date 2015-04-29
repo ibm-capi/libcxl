@@ -514,3 +514,55 @@ int cxl_set_prefault_mode(struct cxl_afu_h *afu, enum cxl_prefault_mode value)
 	}
 	return write_sysfs_afu(afu, PREFAULT_MODE, str);
 }
+
+/* Returns the total size of the afu_err_buff in bytes */
+int cxl_errinfo_size(struct cxl_afu_h *afu, size_t *valp)
+{
+	/* check if we need to fetch the size of the buffer */
+	if (afu->errbuff_size == -1) {
+		char * path;
+		struct stat st;
+
+		path = sysfs_get_path(afu->sysfs_path, "afu_err_buff");
+		if (path == NULL)
+			return -1;
+
+		/* get the file size */
+		if (stat(path, &st) < 0) {
+			free(path);
+			return -1;
+		}
+
+		afu->errbuff_size = st.st_size;
+		free(path);
+	}
+
+	*valp = afu->errbuff_size;
+	return 0;
+}
+
+/* Read and copies contents to afu_err_buff to the provided buffer */
+ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
+			 size_t len)
+{
+	/* check if we need to open the descriptor */
+	if (afu->fd_errbuff == -1) {
+		char * path;
+
+		path = sysfs_get_path(afu->sysfs_path, "afu_err_buff");
+		if (path == NULL)
+			return -1;
+
+		afu->fd_errbuff = open(path, O_RDONLY | O_CLOEXEC);
+		free(path);
+
+		if (afu->fd_errbuff == -1)
+			return -1;
+	}
+
+	/* seek to right offset and read contents */
+	if (lseek(afu->fd_errbuff, off, SEEK_SET) < 0)
+		return -1;
+
+	return read(afu->fd_errbuff, dst, len);
+}

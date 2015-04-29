@@ -206,4 +206,26 @@ int cxl_mmio_read32(struct cxl_afu_h *afu, uint64_t offset, uint32_t *data);
  */
 int cxl_mmio_install_sigbus_handler();
 
+/**
+ * Returns the size of afu_err_buff in bytes.
+ * @param afu Handle to the afu.
+ * @param valp Pointer to the location where size is copied to.
+ * @return In case of success '0' is returned. In case of an error or
+ * the afu_err_buff doesn't exist, -1 is returned and errno is set
+ * appropriately.
+ */
+int cxl_errinfo_size(struct cxl_afu_h *afu, size_t *valp);
+
+/**
+ * Read and copy the contents of afu_err_info buffer into the provided buffer.
+ * @param afu Handle to the afu
+ * @param dst Pointer to the buffer where data would be copied.
+ * @param off Start offset within the afu_err_info handle.
+ * @param len Number of bytes to be copied after the start offset.
+ * @return The number of bytes copied from the afu_err_buff to dst. In case of
+ * an error or the afu_err_buff doesn't exist, -1 is returned and errno is set
+ * appropriately.
+ */
+ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
+			 size_t len);
 #endif

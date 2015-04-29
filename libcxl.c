@@ -88,6 +88,8 @@ static struct cxl_afu_h * malloc_afu(void)
 	afu->mmio_addr = NULL;
 	afu->dev_name = NULL;
 	afu->sysfs_path = NULL;
+	afu->fd_errbuff = -1;
+	afu->errbuff_size = -1;
 
 	return afu;
 }
@@ -204,6 +206,8 @@ static void _cxl_afu_free(struct cxl_afu_h *afu, int free_adapter)
 		cxl_mmio_unmap(afu);
 	if (afu->fd != -1)
 		close(afu->fd);
+	if (afu->fd_errbuff != -1)
+		close(afu->fd_errbuff);
 	free(afu);
 }
 
