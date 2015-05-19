@@ -1,0 +1,66 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_ERRINFO_SIZE 3 2015-02-27 "" "CXL Programmer's Manual"
+.SH NAME
+cxl_errinfo_size \- returns the size of afu_err_buff in bytes
+.SH SYNOPSIS
+.BR #include <libcxl.h>
+.PP
+.BI "int cxl_errinfo_size(struct cxl_afu_h "
+.BI * afu ", size_t *" valp );
+.SH DESCRIPTION
+.PP
+.BR cxl_errinfo_size
+stores the size (in bytes) of the
+.B AFU Error Buffer
+associated with the provided
+.IB afu
+context handle at
+.IB valp .
+.PP
+Applications can also use this function to determine if the afu_err_buff
+exists for the attached
+.IR afu .
+.SH RETURN VALUE
+On success, 0 is returned and size of the buffer is stored at
+.I valp
+
+On error, -1 is returned,
+.I errno
+is set appropriately and the contents at
+.I valp
+are not touched
+.SH ERRORS
+.TP
+.B ENOENT
+The AFU does not export afu_err_buff region.
+.TP
+.B EACCES
+Permission to read the contents of AFU Error buffer is denied.
+.TP
+.B ENOMEM
+Insufficient memory.
+.TP
+.B ENOSPC
+No AFU context available.
+.TP
+.B EPROTO
+Unsupported kernel CXL API version.
+.SH FILES
+.TP
+.BI /dev/cxl/afu <i> . <j> d
+AFU device in dedicated process mode.
+.TP
+.BI /dev/cxl/afu <i> . <j> m
+AFU device in AFU directed mode, master context.
+.TP
+.BI /dev/cxl/afu <i> . <j> s
+AFU device in AFU directed mode, slave context.
+.TP
+.BI /dev/cxl/afu <i> . <j> /afu_err_buff
+AFU Error Buffer contents. The contents of this file are
+application specific and depends on the AFU being used.
+
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_errinfo_read (3),
