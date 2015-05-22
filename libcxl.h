@@ -66,7 +66,7 @@ struct cxl_afu_h * cxl_adapter_afu_next(struct cxl_adapter_h *adapter, struct cx
 struct cxl_afu_h * cxl_afu_next(struct cxl_afu_h *afu);
 char * cxl_afu_dev_name(struct cxl_afu_h *afu);
 #define cxl_for_each_adapter_afu(adapter, afu) \
-	for (afu = cxl_adapter_afu_next(adapter, NULL); afu; afu = cxl_adapter_afu_next(NULL, afu))
+	for (afu = cxl_adapter_afu_next(adapter, NULL); afu; afu = cxl_adapter_afu_next(adapter, afu))
 #define cxl_for_each_afu(afu) \
 	for (afu = cxl_afu_next(NULL); afu; afu = cxl_afu_next(afu))
 
