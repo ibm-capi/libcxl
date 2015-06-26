@@ -579,11 +579,16 @@ struct cxl_afu_h * cxl_afu_fd_to_h(int fd)
 	if (fstat(fd, &sb) < 0)
 		goto err_exit;
 	afu->fd = fd;
-	if (!S_ISCHR(sb.st_mode))
-		goto enodev;
-	if (!(afu->dev_name = find_dev_name(major(sb.st_rdev),
-					    minor(sb.st_rdev))))
-		goto enodev;
+
+	if (S_ISCHR(sb.st_mode)) {
+		afu->dev_name = find_dev_name(major(sb.st_rdev), minor(sb.st_rdev));
+		if (!afu->dev_name)
+			goto enodev;
+	} else {
+		/* Could be an anonymous inode - see if the get_afu_id ioctl succeeds */
+		afu->dev_name = NULL;
+	}
+
 	if (cxl_afu_sysfs(afu, &afu->sysfs_path) == -1)
 		goto err_exit;
 	if (cxl_get_api_version_compatible(afu, &api_version))
