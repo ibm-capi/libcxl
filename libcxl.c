@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <err.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <regex.h>
@@ -223,14 +224,37 @@ int cxl_afu_opened(struct cxl_afu_h *afu)
 
 static int cxl_sysfs_fd(char **bufp, struct cxl_afu_h *afu)
 {
+	struct cxl_afu_id afuid;
+	char suffix = '\0';
 	int fd = cxl_afu_fd(afu);
-	struct stat sb;
 
-	if (fstat(fd, &sb) < 0)
+	/* fetch the afu id via ioctl to the kernel driver */
+	if (ioctl(fd, CXL_IOCTL_GET_AFU_ID, &afuid) < 0) {
+		struct stat sb;
+
+		/* if the ioctl is not recognized, fallback to old method */
+		if ((errno != EINVAL) || (fstat(fd, &sb) < 0) ||
+		    !S_ISCHR(sb.st_mode))
+			return -1;
+
+		return asprintf(bufp, "/sys/dev/char/%i:%i", major(sb.st_rdev),
+				minor(sb.st_rdev));
+	}
+
+	switch (afuid.afu_mode) {
+	case CXL_MODE_DEDICATED:
+		suffix = 'd';
+		break;
+	case CXL_MODE_DIRECTED:
+		suffix = (afuid.flags & CXL_AFUID_FLAG_SLAVE) ? 's' : 'm';
+		break;
+	default:
+		errno = EINVAL;
 		return -1;
-	if (!S_ISCHR(sb.st_mode))
-		return -1;
-	return asprintf(bufp, "/sys/dev/char/%i:%i", major(sb.st_rdev), minor(sb.st_rdev));
+	}
+
+	return asprintf(bufp, "/sys/class/cxl/afu%i.%i%c", afuid.card_id,
+			afuid.afu_offset, suffix);
 }
 
 static int cxl_afu_sysfs(struct cxl_afu_h *afu, char **bufp)
@@ -555,11 +579,16 @@ struct cxl_afu_h * cxl_afu_fd_to_h(int fd)
 	if (fstat(fd, &sb) < 0)
 		goto err_exit;
 	afu->fd = fd;
-	if (!S_ISCHR(sb.st_mode))
-		goto enodev;
-	if (!(afu->dev_name = find_dev_name(major(sb.st_rdev),
-					    minor(sb.st_rdev))))
-		goto enodev;
+
+	if (S_ISCHR(sb.st_mode)) {
+		afu->dev_name = find_dev_name(major(sb.st_rdev), minor(sb.st_rdev));
+		if (!afu->dev_name)
+			goto enodev;
+	} else {
+		/* Could be an anonymous inode - see if the get_afu_id ioctl succeeds */
+		afu->dev_name = NULL;
+	}
+
 	if (cxl_afu_sysfs(afu, &afu->sysfs_path) == -1)
 		goto err_exit;
 	if (cxl_get_api_version_compatible(afu, &api_version))

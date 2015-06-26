@@ -4,14 +4,15 @@ include Makefile.vars
 OBJS = libcxl.o libcxl_sysfs.o
 CFLAGS += -I include
 
-all: include/misc/cxl.h libcxl.so libcxl.a
+all: check_cxl_header libcxl.so libcxl.a
 
-CHECK_HEADER = $(shell echo \\\#include $(1) | \
-                 $(CC) $(CFLAGS) -E - > /dev/null 2>&1 && echo y || echo n)
+# Update this to test a single feature from the most recent header we require:
+CHECK_CXL_HEADER_IS_UP_TO_DATE = $(shell /bin/echo -e \\\#include $(1)\\\nvoid test\(struct cxl_afu_id test\)\; | \
+                 $(CC) $(CFLAGS) -Werror -x c -S - > /dev/null 2>&1 && echo y || echo n)
 
-include/misc/cxl.h:
-ifeq ($(call CHECK_HEADER,"<misc/cxl.h>"),n)
-	$(call Q,WGET include/misc/cxl.h, wget -P include/misc -q http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h)
+check_cxl_header:
+ifeq ($(call CHECK_CXL_HEADER_IS_UP_TO_DATE,"<misc/cxl.h>"),n)
+	$(call Q,CURL include/misc/cxl.h, curl -o include/misc/cxl.h -s http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h)
 endif
 
 libcxl.o libcxl_sysfs.o : CFLAGS += -fPIC
