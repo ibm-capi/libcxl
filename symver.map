@@ -61,3 +61,10 @@ LIBCXL_1 {
 	local:
 		*;
 };
+
+LIBCXL_1.1 {
+	global:
+		cxl_get_cr_class;
+		cxl_get_cr_device;
+		cxl_get_cr_vendor;
+} LIBCXL_1;
