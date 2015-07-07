@@ -33,6 +33,8 @@ Jobs, described by AFU specific Work Element Descriptors (WEDs),
 can be submitted and executed by AFUs.
 AFU MMIO space can be mapped into the current process memory, and
 AFUs can be configured and controlled via MMIO reads and writes.
+Also if an AFU exports an AFU Error Buffer (afu_err_buff), its contents
+can be queried.
 .SS Constant macros
 .TS
 ;
@@ -177,6 +179,16 @@ cxl_mmio_unmap	unmap an AFU Problem State Area
 cxl_mmio_write32	write a 32-bit word to the mapped AFU Problem State Area
 cxl_mmio_write64	write a 32-bit word to the mapped AFU Problem State Area
 .TE
+.SS AFU Error Buffer query functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_errinfo_size	returns the size of afu_err_buff in bytes
+cxl_errinfo_read	read and copy the contents of afu_err_info buffer into the provided buffer
+.TE
 .SH SEE ALSO
 .BR cxl_adapter_afu_next (3),
 .BR cxl_adapter_dev_name (3),
@@ -194,6 +206,8 @@ cxl_mmio_write64	write a 32-bit word to the mapped AFU Problem State Area
 .BR cxl_afu_open_h (3),
 .BR cxl_afu_opened (3),
 .BR cxl_afu_sysfs_pci (3),
+.BR cxl_errinfo_size (3),
+.BR cxl_errinfo_read (3),
 .BR cxl_for_each_adapter (3),
 .BR cxl_for_each_adapter_afu (3),
 .BR cxl_for_each_afu (3),

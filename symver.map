@@ -58,6 +58,9 @@ LIBCXL_1 {
 
 		cxl_mmio_install_sigbus_handler;
 
+		cxl_errinfo_size;
+		cxl_errinfo_read;
+
 	local:
 		*;
 };

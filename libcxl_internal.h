@@ -40,6 +40,8 @@ struct cxl_afu_h {
 	void *mmio_addr;
 	__u32 mmio_flags;
 	size_t mmio_size;
+	int fd_errbuff; /* fd to the afu_err_buff */
+	size_t errbuff_size;
 };
 
 int cxl_get_dev(struct cxl_afu_h *afu, long *majorp, long *minorp);
