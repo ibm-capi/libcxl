@@ -71,3 +71,8 @@ LIBCXL_1.1 {
 		cxl_get_cr_device;
 		cxl_get_cr_vendor;
 } LIBCXL_1;
+
+LIBCXL_1.2 {
+	global:
+		cxl_afu_attach_full;
+} LIBCXL_1.1;

@@ -625,8 +625,9 @@ int cxl_afu_attach(struct cxl_afu_h *afu, __u64 wed)
 	return ioctl(afu->fd, CXL_IOCTL_START_WORK, &work);
 }
 
-int cxl_afu_attach_full(struct cxl_afu_h *afu, __u64 wed, __u16 num_interrupts,
-			__u64 amr)
+__asm__(".symver cxl_afu_attach_full_2, cxl_afu_attach_full@@LIBCXL_1.2");
+int cxl_afu_attach_full_2(struct cxl_afu_h *afu, __u64 wed, __s16 num_interrupts,
+			__u64 amr, __u64 flags)
 {
 	struct cxl_ioctl_start_work work;
 
@@ -637,11 +638,24 @@ int cxl_afu_attach_full(struct cxl_afu_h *afu, __u64 wed, __u16 num_interrupts,
 
 	memset(&work, 0, sizeof(work));
 	work.work_element_descriptor = wed;
-	work.flags = CXL_START_WORK_NUM_IRQS | CXL_START_WORK_AMR;
-	work.num_interrupts = num_interrupts;
-	work.amr = amr;
+	work.flags = flags;
+	if (num_interrupts >= 0) {
+		work.flags |= CXL_START_WORK_NUM_IRQS;
+		work.num_interrupts = num_interrupts;
+	}
+	if (amr) {
+		work.flags |= CXL_START_WORK_AMR;
+		work.amr = amr;
+	}
 
 	return ioctl(afu->fd, CXL_IOCTL_START_WORK, &work);
+}
+
+__asm__(".symver cxl_afu_attach_full_1, cxl_afu_attach_full@LIBCXL_1");
+int cxl_afu_attach_full_1(struct cxl_afu_h *afu, __u64 wed,
+			  __u16 num_interrupts, __u64 amr)
+{
+	return cxl_afu_attach_full_2(afu, wed, num_interrupts, amr, 0);
 }
 
 /*
