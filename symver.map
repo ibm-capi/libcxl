@@ -41,7 +41,6 @@ LIBCXL_1 {
 		cxl_get_image_loaded;
 		cxl_get_psl_revision;
 
-		cxl_pending_event;
 		cxl_read_event;
 		cxl_read_expected_event;
 
@@ -71,3 +70,8 @@ LIBCXL_1.1 {
 		cxl_get_cr_device;
 		cxl_get_cr_vendor;
 } LIBCXL_1;
+
+LIBCXL_1.2 {
+	global:
+		cxl_event_pending;
+} LIBCXL_1.1;
