@@ -644,17 +644,9 @@ int cxl_afu_attach_full(struct cxl_afu_h *afu, __u64 wed, __u16 num_interrupts,
 	return ioctl(afu->fd, CXL_IOCTL_START_WORK, &work);
 }
 
-struct cxl_ioctl_start_work *cxl_work_alloc()
-{
-	struct cxl_ioctl_start_work *work;
-
-	work = malloc(sizeof(struct cxl_ioctl_start_work));
-	if (work)
-		memset(work, 0, sizeof(struct cxl_ioctl_start_work));
-	return work;
-}
-
-int cxl_work_attach(struct cxl_ioctl_start_work* work, struct cxl_afu_h *afu)
+inline
+int cxl_afu_attach_work(struct cxl_afu_h *afu,
+			struct cxl_ioctl_start_work *work)
 {
 	if (afu == NULL || afu->fd < 0 || work == NULL) {
 		errno = EINVAL;
@@ -663,6 +655,13 @@ int cxl_work_attach(struct cxl_ioctl_start_work* work, struct cxl_afu_h *afu)
 	return ioctl(afu->fd, CXL_IOCTL_START_WORK, work);
 }
 
+inline
+struct cxl_ioctl_start_work *cxl_work_alloc()
+{
+	return calloc(1, sizeof(struct cxl_ioctl_start_work));
+}
+
+inline
 int cxl_work_free(struct cxl_ioctl_start_work *work)
 {
 	if (work == NULL) {
@@ -673,6 +672,7 @@ int cxl_work_free(struct cxl_ioctl_start_work *work)
 	return 0;
 }
 
+inline
 int cxl_work_get_amr(struct cxl_ioctl_start_work *work, __u64 *valp)
 {
 	if (work == NULL) {
@@ -683,6 +683,7 @@ int cxl_work_get_amr(struct cxl_ioctl_start_work *work, __u64 *valp)
 	return 0;
 }
 
+inline
 int cxl_work_get_num_irqs(struct cxl_ioctl_start_work *work, __s16 *valp)
 {
 	if (work == NULL) {
@@ -693,6 +694,7 @@ int cxl_work_get_num_irqs(struct cxl_ioctl_start_work *work, __s16 *valp)
 	return 0;
 }
 
+inline
 int cxl_work_get_wed(struct cxl_ioctl_start_work *work, __u64 *valp)
 {
 	if (work == NULL) {
@@ -703,6 +705,7 @@ int cxl_work_get_wed(struct cxl_ioctl_start_work *work, __u64 *valp)
 	return 0;
 }
 
+inline
 int cxl_work_set_amr(struct cxl_ioctl_start_work *work, __u64 amr)
 {
 	if (work == NULL) {
@@ -717,6 +720,7 @@ int cxl_work_set_amr(struct cxl_ioctl_start_work *work, __u64 amr)
 	return 0;
 }
 
+inline
 int cxl_work_set_num_irqs(struct cxl_ioctl_start_work *work, __s16 irqs)
 {
 	if (work == NULL) {
@@ -731,6 +735,7 @@ int cxl_work_set_num_irqs(struct cxl_ioctl_start_work *work, __s16 irqs)
 	return 0;
 }
 
+inline
 int cxl_work_set_wed(struct cxl_ioctl_start_work *work, __u64 wed)
 {
 	if (work == NULL) {

@@ -74,8 +74,8 @@ LIBCXL_1.1 {
 
 LIBCXL_1.2 {
 	global:
+		cxl_afu_attach_work;
 		cxl_work_alloc;
-		cxl_work_attach;
 		cxl_work_free;
 		cxl_work_get_amr;
 		cxl_work_get_num_irqs;
