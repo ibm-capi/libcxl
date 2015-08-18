@@ -99,10 +99,10 @@ lb lb
 lb l.
 Function	Description
 _
-cxl_afu_attach_full	attach the calling process's memory to an open AFU
 cxl_afu_attach	attach the calling process's memory to an open AFU
+cxl_afu_attach_full	attach the calling process's memory to an open AFU (Deprecated Interface)
+cxl_afu_attach_work	attach the calling process's memory to an open AFU
 cxl_work_alloc	allocate and initialize a work structure
-cxl_work_attach	attach the calling process's memory to an open AFU
 cxl_work_free	free a work structure
 cxl_work_get_amr	get the value of the authority mask register
 cxl_work_get_num_irqs	get the number of interrupts requested
@@ -205,6 +205,7 @@ cxl_errinfo_read	read and copy the contents of afu_err_info buffer into the prov
 .BR cxl_adapter_next (3),
 .BR cxl_afu_attach (3),
 .BR cxl_afu_attach_full (3),
+.BR cxl_afu_attach_work (3),
 .BR cxl_afu_dev_name (3),
 .BR cxl_afu_fd (3),
 .BR cxl_afu_fd_to_h (3),
@@ -256,10 +257,8 @@ cxl_errinfo_read	read and copy the contents of afu_err_info buffer into the prov
 .BR cxl_work_alloc (3),
 .BR cxl_work_get_amr (3),
 .BR cxl_work_set_amr (3),
-.BR cxl_work_attach (3),
 .BR cxl_work_get_num_irqs (3),
 .BR cxl_work_set_num_irqs (3),
 .BR cxl_work_free (3),
 .BR cxl_work_get_wed (3),
 .BR cxl_work_set_wed (3)
-

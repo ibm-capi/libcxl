@@ -14,7 +14,9 @@ sets the maximum number of interrupts that can be
 requested for
 .IR afu ,
 when calling
-.BR cxl_afu_attach_full ().
+.BR cxl_afu_attach_full ()
+or
+.BR cxl_afu_attach_work ().
 .I value
 must be greater or equal to the value returned by
 .BR cxl_get_irqs_min ().
@@ -30,5 +32,6 @@ Invalid argument value.
 .SH SEE ALSO
 .BR cxl (3),
 .BR cxl_afu_attach_full (3),
+.BR cxl_afu_attach_work (3),
 .BR cxl_get_irqs_max (3),
 .BR cxl_get_irqs_min (3)

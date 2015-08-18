@@ -30,7 +30,10 @@ prefault what it points to.
 .TP
 .B CXL_PREFAULT_MODE_ALL
 Prefault all the segments mapped by the process calling
-.BR cxl_afu_attach ().
+.BR cxl_afu_attach (),
+.BR cxl_afu_attach_full ()
+or
+.BR cxl_afu_attach_work ().
 .SH RETURN VALUE
 On success, 0 is returned.
 On error, \-1 is returned and
@@ -48,6 +51,7 @@ Insufficient memory.
 .BR cxl_adapter_afu_next (3),
 .BR cxl_afu_attach (3),
 .BR cxl_afu_attach_full (3),
+.BR cxl_afu_attach_work (3),
 .BR cxl_afu_next (3),
 .BR cxl_get_api_version (3),
 .BR cxl_get_api_version_compatible (3),
