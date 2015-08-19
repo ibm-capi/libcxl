@@ -41,7 +41,6 @@ LIBCXL_1 {
 		cxl_get_image_loaded;
 		cxl_get_psl_revision;
 
-		cxl_pending_event;
 		cxl_read_event;
 		cxl_read_expected_event;
 
@@ -83,4 +82,6 @@ LIBCXL_1.2 {
 		cxl_work_set_amr;
 		cxl_work_set_num_irqs;
 		cxl_work_set_wed;
+
+		cxl_event_pending;
 } LIBCXL_1.1;
