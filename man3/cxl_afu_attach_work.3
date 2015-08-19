@@ -1,0 +1,87 @@
+.\" Copyright 2015 IBM Corp.
+.\"
+.TH CXL_AFU_ATTACH_WORK 3 2015-08-15 "LIBCXL 1.2" "CXL Programmer's Manual"
+.SH NAME
+cxl_afu_attach_work \- attach the calling process's memory to an open AFU
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_afu_attach_work(struct cxl_afu_h"
+.BI * afu ", struct cxl_ioctl_work_attach *" work );
+.SH DESCRIPTION
+.BR cxl_afu_attach_work ()
+attaches a context of
+.I afu
+to the current process, specifying various parameters via the
+.I work
+structure, and starts the AFU context.
+.PP
+On success, all memory mapped into this process is accessible to the
+AFU context using the same effective addresses.
+No additional calls are required to map/unmap memory.
+The AFU memory context will be updated as userspace allocates and
+frees memory.
+.PP
+Three parameters can be set in the
+.I work
+structure:
+.PP
+.BR cxl_work_set_wed ()
+sets the work element descriptor, a 64-bit argument defined by the AFU.
+Typically this is an effective address pointing to an AFU specific
+structure describing what work to perform.
+.PP
+.BR cxl_work_set_num_irqs ()
+requests a number of userspace interrupts,
+in the range defined by
+.BR cxl_get_irqs_min ()
+and
+.BR cxl_get_irqs_max ().
+A negative value specifies that 
+.BR cxl_afu_attach_work ()
+should allocate the minimum number of interrupts required
+by an AFU context, returned by
+.BR cxl_get_irqs_min ().
+.PP
+.BR cxl_work_set_amr ()
+sets the authority mask register (same as the powerpc AMR).
+A null value indicates that the authority mask register
+should not be set.
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value, or AFU not opened.
+.TP
+.B ENOMEM
+Not enough memory.
+.TP
+.B ENOSPC
+Not enough interrupts available.
+.SH SEE ALSO
+.BR cxl (),
+.BR cxl_afu_attach (),
+.BR cxl_afu_attach_full (),
+.BR cxl_afu_fd_to_h (),
+.BR cxl_afu_free (),
+.BR cxl_afu_open_dev (),
+.BR cxl_afu_opened (),
+.BR cxl_get_irqs_max (),
+.BR cxl_get_irqs_min (),
+.BR cxl_get_prefault_mode (),
+.BR cxl_mmio_map (),
+.BR cxl_set_irqs_max (),
+.BR cxl_set_mode (),
+.BR cxl_set_prefault_mode (),
+.BR cxl_work_alloc (),
+.BR cxl_work_free (),
+.BR cxl_work_get_amr (),
+.BR cxl_work_get_num_irqs (),
+.BR cxl_work_get_wed (),
+.BR cxl_work_set_amr (),
+.BR cxl_work_set_num_irqs (),
+.BR cxl_work_set_wed ()

@@ -71,3 +71,16 @@ LIBCXL_1.1 {
 		cxl_get_cr_device;
 		cxl_get_cr_vendor;
 } LIBCXL_1;
+
+LIBCXL_1.2 {
+	global:
+		cxl_afu_attach_work;
+		cxl_work_alloc;
+		cxl_work_free;
+		cxl_work_get_amr;
+		cxl_work_get_num_irqs;
+		cxl_work_get_wed;
+		cxl_work_set_amr;
+		cxl_work_set_num_irqs;
+		cxl_work_set_wed;
+} LIBCXL_1.1;
