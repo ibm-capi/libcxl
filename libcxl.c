@@ -895,7 +895,7 @@ int cxl_read_event(struct cxl_afu_h *afu, struct cxl_event *event)
 	if (event_cached(afu)) {
 		rc = fetch_cached_event(afu, event);
 		if (p)
-			free(p)
+			free(p);
 		return rc;
 	}
 
