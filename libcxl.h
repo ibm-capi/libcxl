@@ -218,7 +218,7 @@ int cxl_mmio_read32(struct cxl_afu_h *afu, uint64_t offset, uint32_t *data);
  *
  * Call this once per process prior to any MMIO accesses.
  */
-int cxl_mmio_install_sigbus_handler();
+int cxl_mmio_install_sigbus_handler(void);
 
 /**
  * Returns the size of afu_err_buff in bytes.
