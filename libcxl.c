@@ -211,6 +211,10 @@ static void _cxl_afu_free(struct cxl_afu_h *afu, int free_adapter)
 		close(afu->fd_errbuff);
 	if (afu->dev_name)
 		free(afu->dev_name);
+	if (afu->event_buf) {
+		free(afu->event_buf);
+		afu->event_buf = NULL;
+	}
 	free(afu);
 }
 
@@ -894,14 +898,10 @@ int cxl_read_event(struct cxl_afu_h *afu, struct cxl_event *event)
 	/* Send buffered event */
 	if (event_cached(afu)) {
 		rc = fetch_cached_event(afu, event);
-		if (p)
-			free(p);
 		return rc;
 	}
 
 	if (afu->fd < 0) {
-		if (p)
-			free(p);
 		errno = EINVAL;
 		return -1;
 	}
@@ -912,8 +912,6 @@ int cxl_read_event(struct cxl_afu_h *afu, struct cxl_event *event)
 		poison((__u8 *)event, sizeof(*event));
 		event->header.type = CXL_EVENT_READ_FAIL;
 		event->header.size = 0;
-		if (p)
-			free(p);
 		if (size < 0)
 			return size;
 		errno = ENODATA;
@@ -927,10 +925,7 @@ int cxl_read_event(struct cxl_afu_h *afu, struct cxl_event *event)
 	afu->event_buf_end = (struct cxl_event *)
 		((char *)afu->event_buf + size);
 
-	rc = fetch_cached_event(afu, event);
-	if (p)
-		free(p);
-	return rc;
+	return fetch_cached_event(afu, event);
 }
 
 /*
