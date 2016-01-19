@@ -3,8 +3,17 @@ include Makefile.vars
 
 OBJS = libcxl.o libcxl_sysfs.o
 CFLAGS += -I include
+ifdef VERS_LIB
+LIBNAME   = libcxl.so.$(VERS_LIB)
+else
+LIBNAME   = libcxl.so
+endif
+ifdef VERS_SONAME
+LIBSONAME = libcxl.so.$(VERS_SONAME)
+SONAMEOPT = -Wl,-soname,$(LIBSONAME)
+endif
 
-all: check_cxl_header libcxl.so libcxl.a
+all: check_cxl_header $(LIBNAME) libcxl.a
 
 HAS_WGET = $(shell /bin/which wget > /dev/null 2>&1 && echo y || echo n)
 HAS_CURL = $(shell /bin/which curl > /dev/null 2>&1 && echo y || echo n)
@@ -27,8 +36,8 @@ endif
 
 libcxl.o libcxl_sysfs.o : CFLAGS += -fPIC
 
-libcxl.so: libcxl.o libcxl_sysfs.o symver.map
-	$(call Q,CC, $(CC) $(CFLAGS) -shared libcxl.o libcxl_sysfs.o -o libcxl.so, libcxl.so) -Wl,--version-script symver.map
+$(LIBNAME): libcxl.o libcxl_sysfs.o symver.map
+	$(call Q,CC, $(CC) $(CFLAGS) -shared libcxl.o libcxl_sysfs.o -o $(LIBNAME), $(LIBNAME)) -Wl,--version-script symver.map $(SONAMEOPT)
 
 libcxl.a: libcxl.o libcxl_sysfs.o
 	$(call Q,AR, ar rcs libcxl.a libcxl.o libcxl_sysfs.o, libcxl.a)
