@@ -40,7 +40,7 @@ libcxl.so: $(LIBNAME)
 	ln -s $(LIBNAME) libcxl.so
 
 $(LIBNAME): libcxl.o libcxl_sysfs.o symver.map
-	$(call Q,CC, $(CC) $(CFLAGS) -shared libcxl.o libcxl_sysfs.o -o $(LIBNAME), $(LIBNAME)) -Wl,--version-script symver.map $(SONAMEOPT)
+	$(call Q,CC, $(CC) $(CFLAGS) $(LDFLAGS) -shared libcxl.o libcxl_sysfs.o -o $(LIBNAME), $(LIBNAME)) -Wl,--version-script symver.map $(SONAMEOPT)
 
 libcxl.a: libcxl.o libcxl_sysfs.o
 	$(call Q,AR, ar rcs libcxl.a libcxl.o libcxl_sysfs.o, libcxl.a)
