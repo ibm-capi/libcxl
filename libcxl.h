@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <misc/cxl.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CXL_KERNEL_API_VERSION 1
 
 #define CXL_SYSFS_CLASS "/sys/class/cxl"
@@ -242,4 +246,8 @@ int cxl_errinfo_size(struct cxl_afu_h *afu, size_t *valp);
  */
 ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
 			 size_t len);
+#ifdef __cplusplus
+}
+#endif
+
 #endif
