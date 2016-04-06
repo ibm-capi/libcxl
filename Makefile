@@ -3,17 +3,17 @@ include Makefile.vars
 
 OBJS = libcxl.o libcxl_sysfs.o
 CFLAGS += -I include
-ifdef VERS_LIB
+
+# change VERS_LIB if new git tag
+VERS_LIB = 1.3
 LIBNAME   = libcxl.so.$(VERS_LIB)
-else
-LIBNAME   = libcxl.so
-endif
-ifdef VERS_SONAME
+# change VERS_SONAME only if library breaks backward compatibility.
+# refer to file symver.map
+VERS_SONAME=1
 LIBSONAME = libcxl.so.$(VERS_SONAME)
 SONAMEOPT = -Wl,-soname,$(LIBSONAME)
-endif
 
-all: check_cxl_header $(LIBNAME) libcxl.a
+all: check_cxl_header $(LIBNAME) libcxl.so libcxl.a
 
 HAS_WGET = $(shell /bin/which wget > /dev/null 2>&1 && echo y || echo n)
 HAS_CURL = $(shell /bin/which curl > /dev/null 2>&1 && echo y || echo n)
@@ -35,6 +35,9 @@ endif
 endif
 
 libcxl.o libcxl_sysfs.o : CFLAGS += -fPIC
+
+libcxl.so: $(LIBNAME)
+	ln -s $(LIBNAME) libcxl.so
 
 $(LIBNAME): libcxl.o libcxl_sysfs.o symver.map
 	$(call Q,CC, $(CC) $(CFLAGS) -shared libcxl.o libcxl_sysfs.o -o $(LIBNAME), $(LIBNAME)) -Wl,--version-script symver.map $(SONAMEOPT)
