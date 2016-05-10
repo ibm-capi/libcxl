@@ -25,4 +25,10 @@ cxl_for_each_adapter_afu.3.html: cxl_adapter_afu_next.3.html
 cxl_for_each_afu.3.html: cxl_afu_next.3.html
 	cp -f $< $@
 
-.PHONY: all clean
+include ../Makefile.rules
+
+install:
+	mkdir -p $(DESTDIR)$(mandir)/man3
+	install -m 0644 $(SRC) $(DESTDIR)$(mandir)/man3/
+
+.PHONY: all clean install
