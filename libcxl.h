@@ -176,6 +176,7 @@ int cxl_get_caia_version(struct cxl_adapter_h *adapter, long *majorp,
 			 long *minorp);
 int cxl_get_image_loaded(struct cxl_adapter_h *adapter, enum cxl_image *valp);
 int cxl_get_psl_revision(struct cxl_adapter_h *adapter, long *valp);
+int cxl_get_psl_timebase_synced(struct cxl_adapter_h *adapter, long *valp);
 
 /*
  * Events

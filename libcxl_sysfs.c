@@ -53,6 +53,7 @@ enum cxl_sysfs_attr {
 	CAIA_VERSION,
 	IMAGE_LOADED,
 	PSL_REVISION,
+	PSL_TIMEBASE_SYNCED,
 };
 
 struct cxl_sysfs_entry {
@@ -89,9 +90,10 @@ static struct cxl_sysfs_entry sysfs_entry[] = {
  { "caia_version", scan_caia_version, 2 },	/* CAIA_VERSION */
  { "image_loaded", scan_image, 1 },		/* IMAGE_LOADED */
  { "psl_revision", scan_int, 1 },		/* PSL_REVISION */
+ { "psl_timebase_synced", scan_int, 1 },	/* PSL_TIMEBASE_SYNCED */
 };
 
-#define LAST_ATTR PSL_REVISION
+#define LAST_ATTR PSL_TIMEBASE_SYNCED
 #define OUT_OF_RANGE(attr) ((attr) < 0 || (attr) > LAST_ATTR)
 
 static int scan_int(char *attr_str, long *majorp, long *minorp)
@@ -424,6 +426,11 @@ int cxl_get_image_loaded(struct cxl_adapter_h *adapter, enum cxl_image *valp)
 int cxl_get_psl_revision(struct cxl_adapter_h *adapter, long *valp)
 {
 	return read_sysfs_adapter(adapter, PSL_REVISION, valp, NULL);
+}
+
+int cxl_get_psl_timebase_synced(struct cxl_adapter_h *adapter, long *valp)
+{
+	return read_sysfs_adapter(adapter, PSL_TIMEBASE_SYNCED, valp, NULL);
 }
 
 static int write_sysfs_str(char *path, enum cxl_sysfs_attr attr, char *str)
