@@ -85,3 +85,8 @@ LIBCXL_1.2 {
 
 		cxl_event_pending;
 } LIBCXL_1.1;
+
+LIBCXL_1.4 {
+	global:
+		cxl_get_psl_timebase_synced;
+} LIBCXL_1.2;
