@@ -53,6 +53,9 @@ enum cxl_sysfs_attr {
 	CAIA_VERSION,
 	IMAGE_LOADED,
 	PSL_REVISION,
+
+	/* Add new attrs above this */
+	CXL_ATTR_MAX
 };
 
 struct cxl_sysfs_entry {
@@ -70,29 +73,29 @@ static int scan_prefault_mode(char *attr_str, long *majorp, long *minorp);
 static int scan_caia_version(char *attr_str, long *majorp, long *minorp);
 static int scan_image(char *attr_str, long *majorp, long *minorp);
 
-static struct cxl_sysfs_entry sysfs_entry[] = {
- { "api_version", scan_int, 1 },		/* API_VERSION */
- { "api_version_compatible", scan_int, 1 },	/* API_VERSION_COMPATIBLE */
- { "cr%ld/class", scan_hex, 1 },		/* CR_CLASS */
- { "cr%ld/device", scan_hex, 1 },		/* CR_DEVICE */
- { "cr%ld/vendor", scan_hex, 1 },		/* CR_VENDOR */
- { "irqs_max", scan_int, 1 },			/* IRQS_MAX */
- { "irqs_min", scan_int, 1 },			/* IRQS_MIN */
- { "mmio_size", scan_int, 1 },			/* MMIO_SIZE */
- { "mode", scan_mode, 1 },			/* MODE */
- { "modes_supported", scan_modes, 1 },		/* MODES_SUPPORTED */
- { "prefault_mode", scan_prefault_mode, 1 },	/* PREFAULT_MODE */
- { "dev", scan_dev, 2 },			/* DEV */
- { "pp_mmio_len", scan_int, 1 },		/* PP_MMIO_LEN */
- { "pp_mmio_off", scan_int, 1 },		/* PP_MMIO_OFF */
- { "base_image", scan_int, 1 },			/* BASE_IMAGE */
- { "caia_version", scan_caia_version, 2 },	/* CAIA_VERSION */
- { "image_loaded", scan_image, 1 },		/* IMAGE_LOADED */
- { "psl_revision", scan_int, 1 },		/* PSL_REVISION */
+static struct cxl_sysfs_entry sysfs_entry[CXL_ATTR_MAX] = {
+	[API_VERSION] = { "api_version", scan_int, 1 },
+	[API_VERSION_COMPATIBLE] = { "api_version_compatible", scan_int, 1 },
+	[CR_CLASS] = { "cr%ld/class", scan_hex, 1 },
+	[CR_DEVICE] = { "cr%ld/device", scan_hex, 1 },
+	[CR_VENDOR] = { "cr%ld/vendor", scan_hex, 1 },
+	[IRQS_MAX] = { "irqs_max", scan_int, 1 },
+	[IRQS_MIN] = { "irqs_min", scan_int, 1 },
+	[MMIO_SIZE] = { "mmio_size", scan_int, 1 },
+	[MODE] = { "mode", scan_mode, 1 },
+	[MODES_SUPPORTED] = { "modes_supported", scan_modes, 1 },
+	[PREFAULT_MODE] = { "prefault_mode", scan_prefault_mode, 1 },
+	[DEV] = { "dev", scan_dev, 2 },
+	[PP_MMIO_LEN] = { "pp_mmio_len", scan_int, 1 },
+	[PP_MMIO_OFF] = { "pp_mmio_off", scan_int, 1 },
+	[BASE_IMAGE] = { "base_image", scan_int, 1 },
+	[CAIA_VERSION] = { "caia_version", scan_caia_version, 2 },
+	[IMAGE_LOADED] = { "image_loaded", scan_image, 1 },
+	[PSL_REVISION] = { "psl_revision", scan_int, 1 },
 };
 
-#define LAST_ATTR PSL_REVISION
-#define OUT_OF_RANGE(attr) ((attr) < 0 || (attr) > LAST_ATTR)
+#define OUT_OF_RANGE(attr) ((attr) < 0 || (attr) > CXL_ATTR_MAX || \
+			    (sysfs_entry[attr].name == NULL))
 
 static int scan_int(char *attr_str, long *majorp, long *minorp)
 {
