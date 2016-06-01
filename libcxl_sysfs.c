@@ -94,7 +94,7 @@ static struct cxl_sysfs_entry sysfs_entry[CXL_ATTR_MAX] = {
 	[PSL_REVISION] = { "psl_revision", scan_int, 1 },
 };
 
-#define OUT_OF_RANGE(attr) ((attr) < 0 || (attr) > CXL_ATTR_MAX || \
+#define OUT_OF_RANGE(attr) ((attr) < 0 || (attr) >= CXL_ATTR_MAX || \
 			    (sysfs_entry[attr].name == NULL))
 
 static int scan_int(char *attr_str, long *majorp, long *minorp)
