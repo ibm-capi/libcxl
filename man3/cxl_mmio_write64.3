@@ -19,7 +19,8 @@ from the address of the mapped Problem State Area of
 .IR afu .
 .PP
 .I offset
-must be a multiple of 64, lower than the MMIO size returned by
+is a byte address, aligned on a double word (8 byte) boundary.
+It must be lower than the MMIO size returned by
 .IR cxl_get_mmio_size ().
 The address of the mapped MMIO space is returned by
 .IR cxl_mmio_ptr ().
