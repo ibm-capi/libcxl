@@ -37,10 +37,10 @@ endif
 libcxl.o libcxl_sysfs.o : CFLAGS += -fPIC
 
 libcxl.so: $(LIBNAME)
-	ln -s $(LIBNAME) libcxl.so
+	ln -sf $(LIBNAME) libcxl.so
 
 $(LIBSONAME): $(LIBNAME)
-	ln -s $(LIBNAME) $(LIBSONAME)
+	ln -sf $(LIBNAME) $(LIBSONAME)
 
 $(LIBNAME): libcxl.o libcxl_sysfs.o symver.map
 	$(call Q,CC, $(CC) $(CFLAGS) $(LDFLAGS) -shared libcxl.o libcxl_sysfs.o -o $(LIBNAME), $(LIBNAME)) -Wl,--version-script symver.map $(SONAMEOPT)
