@@ -7,18 +7,13 @@ cxl_mmio_map \- map the per-process Problem State Area of an AFU to memory
 .B #include <libcxl.h>
 .PP
 .B "int cxl_mmio_map(struct cxl_afu_h"
-.BI * afu ", __u32 " flags );
+.BI * afu ", __u32 " flag );
 .SH DESCRIPTION
 .BR cxl_mmio_map ()
 maps the per-process Problem State Area of
 .I afu
-to the current process memory, and sets endianness according to
-.IR flags :
-.BR CXL_MMIO_BIG_ENDIAN ,
-.B CXL_MMIO_HOST_ENDIAN
-or
-.BR CXL_MMIO_LITTLE_ENDIAN .
-.PP
+to the current process memory, and declares AFU endianness according to
+.IR flag .
 The size and contents of this area are specific each AFU.
 The size can be discovered with
 .BR cxl_get_mmio_size ().
@@ -28,7 +23,29 @@ the MMIO space and slave contexts are allowed to only map the per
 process MMIO space associated with the context.
 In dedicated process mode the entire MMIO space can always be mapped.
 .PP
-Only 32 and 64-bit accesses are supported by POWER8.
+The possible values of
+.I flag
+are:
+.TP
+.B CXL_MMIO_BIG_ENDIAN
+AFU data is big-endian
+.TP
+.B CXL_MMIO_LITTLE_ENDIAN
+AFU data is little-endian
+.TP
+.B CXL_MMIO_HOST_ENDIAN
+AFU uses the same endianness as host.
+.PP
+Subsequent
+.BR cxl_mmio_read32 (),
+.BR cxl_mmio_read64 (),
+.BR cxl_mmio_write32 ()
+and
+.BR cxl_mmio_write64 ()
+will honor
+.I flag
+and swap bytes on behalf of the application when required.
+Only 32 and 64-bit accesses are supported by POWER8 and POWER9.
 .SH RETURN VALUE
 On success, 0 is returned.
 On error, \-1 is returned and
