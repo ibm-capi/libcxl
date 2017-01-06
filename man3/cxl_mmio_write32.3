@@ -17,13 +17,16 @@ at
 .I offset
 from the address of the mapped Problem State Area of
 .IR afu .
+Bytes will be swapped if the AFU endianness declared by
+.BR cxl_mmio_map ()
+differs from the host endianness.
 .PP
 .I offset
 is a byte address that is aligned on a word (4 byte) boundary.
 It must be lower than the MMIO size returned by
-.IR cxl_get_mmio_size ().
+.BR cxl_get_mmio_size ().
 The address of the mapped MMIO space is returned by
-.IR cxl_mmio_ptr ().
+.BR cxl_mmio_ptr ().
 .PP
 If the MMIO access fails due to an IO error, a SIGBUS may be sent to the
 application, which would ordinarily result in the process being terminated.
@@ -44,8 +47,8 @@ is set appropriately.
 Invalid argument value, or unmapped MMIO space.
 .TP
 .B EIO
-An unrecoverable error (
-.BR cxl_mmio_install_sigbus_handler ()
+An unrecoverable error
+.RB ( cxl_mmio_install_sigbus_handler ()
 must have been previously called)
 .SH SEE ALSO
 .BR cxl (3),

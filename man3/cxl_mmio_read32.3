@@ -17,18 +17,22 @@ from the address of the mapped Problem State Area of
 .IR afu ,
 and copies its value to the word pointed to by
 .IR data .
+The copy will include byte swapping if the AFU endianness declared by
+.BR cxl_mmio_map ()
+differs from the host endianness.
 .PP
 .I offset
 is a byte address that is aligned on a word (4 byte) boundary.
 It must be lower than the MMIO size returned by
-.IR cxl_get_mmio_size ().
+.BR cxl_get_mmio_size ().
 The address of the mapped MMIO space is returned by
-.IR cxl_mmio_ptr ().
+.BR cxl_mmio_ptr ().
 .PP
 If the MMIO access fails due to an IO error, a SIGBUS may be sent to the
 application, which would ordinarily result in the process being terminated.
 libcxl provides an optional SIGBUS handler, which can be installed with
 .BR cxl_mmio_install_sigbus_handler ().
+.PP
 Installing this signal handler prior to using the MMIO accessor functions will
 cause them to return -1 and set
 .I errno
@@ -46,8 +50,8 @@ is set appropriately.
 Invalid argument value, or unmapped MMIO space.
 .TP
 .B EIO
-An unrecoverable error (
-.BR cxl_mmio_install_sigbus_handler ()
+An unrecoverable error
+.RB ( cxl_mmio_install_sigbus_handler ()
 must have been previously called)
 .SH SEE ALSO
 .BR cxl (3),
