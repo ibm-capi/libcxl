@@ -17,6 +17,7 @@
 #ifndef _LIBCXL_INTERNAL_H
 #define _LIBCXL_INTERNAL_H
 
+#include <asm/types.h>
 #include <sys/types.h>
 #include <dirent.h>
 
