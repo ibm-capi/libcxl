@@ -220,7 +220,7 @@ static void _cxl_afu_free(struct cxl_afu_h *afu, int free_adapter)
 
 void cxl_afu_free(struct cxl_afu_h *afu)
 {
-	return _cxl_afu_free(afu, 1);
+	_cxl_afu_free(afu, 1);
 }
 
 int cxl_afu_opened(struct cxl_afu_h *afu)
@@ -662,7 +662,7 @@ int cxl_afu_attach_work(struct cxl_afu_h *afu,
 }
 
 inline
-struct cxl_ioctl_start_work *cxl_work_alloc()
+struct cxl_ioctl_start_work *cxl_work_alloc(void)
 {
 	return calloc(1, sizeof(struct cxl_ioctl_start_work));
 }
@@ -1026,7 +1026,7 @@ static struct sigaction cxl_sigbus_old_action;
 static __thread jmp_buf cxl_sigbus_env;
 static __thread int cxl_sigbus_jmp_enabled;
 
-static inline int cxl_mmio_try()
+static inline int cxl_mmio_try(void)
 {
 	int ret;
 
@@ -1040,7 +1040,7 @@ static inline int cxl_mmio_try()
 	return ret;
 }
 
-static inline void cxl_mmio_success()
+static inline void cxl_mmio_success(void)
 {
 	cxl_sigbus_jmp_enabled = 0;
 }
@@ -1166,7 +1166,7 @@ int cxl_mmio_read64(struct cxl_afu_h *afu, uint64_t offset, uint64_t *data)
 	d = _cxl_mmio_read64(afu, offset);
 	cxl_mmio_success();
 
-	if (d == 0xffffffffffffffff)
+	if (d == 0xffffffffffffffffull)
 		goto fail;
 
 	*data = d;
@@ -1187,7 +1187,7 @@ fail:
 		raise(SIGBUS);
 	}
 
-	*data = 0xffffffffffffffff;
+	*data = 0xffffffffffffffffull;
 	errno = EIO;
 	return -1;
 }
@@ -1293,11 +1293,11 @@ static void cxl_sigbus_action(int sig, siginfo_t *info, void *context)
 	 */
 	if (cxl_sigbus_old_action.sa_sigaction) {
 		/* fprintf(stderr, "libcxl: Calling chained SIGBUS handler\n"); */
-		return cxl_sigbus_old_action.sa_sigaction(sig, info, context);
+		cxl_sigbus_old_action.sa_sigaction(sig, info, context);
 	}
 }
 
-int cxl_mmio_install_sigbus_handler()
+int cxl_mmio_install_sigbus_handler(void)
 {
 	struct sigaction act;
 
