@@ -15,7 +15,7 @@
  */
 
 #define _GNU_SOURCE /* For asprintf */
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #define __STDC_FORMAT_MACROS
 
 #include <inttypes.h>
