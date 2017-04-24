@@ -23,7 +23,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <sys/mman.h>
 
 #include <misc/cxl.h>
 #include "libcxl.h"
@@ -576,55 +575,4 @@ ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
 		return -1;
 
 	return read(afu->fd_errbuff, dst, len);
-}
-
-/* Get the path to afu desc and open handle to it */
-int cxl_open_afudesc(struct cxl_afu_h *afu)
-{
-	int rc = -1;
-	char *path;
-
-	/* already mapped and opened */
-	if (afu->fd_afudesc >= 0)
-		return 0;
-
-	path = sysfs_get_path(afu->sysfs_path, "afu_desc");
-	if (!path)
-		goto out;
-
-	rc = open(path, O_RDONLY |  O_CLOEXEC);
-	if (rc < 0)
-		goto out;
-
-	/* mmap the first page of the afu descriptor */
-	afu->mmio_afudesc = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ,
-				 MAP_SHARED, rc, 0);
-
-	if (afu->mmio_afudesc == MAP_FAILED) {
-		close(rc);
-		rc = -1;
-		goto out;
-	}
-
-	afu->fd_afudesc = rc;
-	rc = 0;
-
-out:
-	if (path != NULL)
-		free(path);
-
-	return rc;
-}
-
-/* close the afu desc file handle and mapping */
-void cxl_close_afudesc(struct cxl_afu_h *afu)
-{
-	/* Bail out, if we didn't or were not able to do the mapping */
-	if (afu->fd_afudesc < 0)
-		return;
-
-	munmap(afu->mmio_afudesc, sysconf(_SC_PAGE_SIZE));
-	close(afu->fd_afudesc);
-	afu->fd_afudesc = -1;
-	afu->mmio_afudesc = MAP_FAILED;
 }
