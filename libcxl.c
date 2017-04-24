@@ -91,6 +91,8 @@ static struct cxl_afu_h * malloc_afu(void)
 	afu->sysfs_path = NULL;
 	afu->fd_errbuff = -1;
 	afu->errbuff_size = -1;
+	afu->fd_afudesc = -1;
+	afu->mmio_afudesc = MAP_FAILED;
 
 	return afu;
 }
@@ -197,6 +199,9 @@ static void _cxl_afu_free(struct cxl_afu_h *afu, int free_adapter)
 {
 	if (!afu)
 		return;
+
+	cxl_close_afudesc(afu);
+
 	if (afu->enum_dir)
 		closedir(afu->enum_dir);
 	if (afu->sysfs_path)
@@ -481,6 +486,12 @@ static int open_afu_dev(struct cxl_afu_h *afu, char *path)
 	if (api_version > CXL_KERNEL_API_VERSION) {
 		errno = EPROTO;
 		goto err_close;
+	}
+
+	 /* try opening the afu descriptor attr. Don't fail if we can't. */
+	if (cxl_open_afudesc(afu)) {
+		pr_devel("Unable to open afu_desc for %s. Won't support mmio reads with all FFFFs"
+			 , afu->dev_name);
 	}
 	return 0;
 
@@ -1115,6 +1126,17 @@ static inline uint32_t _cxl_mmio_read32(struct cxl_afu_h *afu, uint64_t offset)
 	return d;
 }
 
+/* Check if the card link if up */
+static inline int cxl_afu_link_ok(struct cxl_afu_h *afu)
+{
+	/* if afu desc not available then assume the link is down */
+	if (afu->fd_afudesc < 0)
+		return 0;
+
+	/* check if first word in afu_desc is all 0xfffs */
+	return ~(*afu->mmio_afudesc) != 0;
+}
+
 int cxl_mmio_write64(struct cxl_afu_h *afu, uint64_t offset, uint64_t data)
 {
 	if (!afu || !afu->mmio_addr)
@@ -1166,7 +1188,7 @@ int cxl_mmio_read64(struct cxl_afu_h *afu, uint64_t offset, uint64_t *data)
 	d = _cxl_mmio_read64(afu, offset);
 	cxl_mmio_success();
 
-	if (d == 0xffffffffffffffffull)
+	if (d == 0xffffffffffffffffull && !cxl_afu_link_ok(afu))
 		goto fail;
 
 	*data = d;
@@ -1244,7 +1266,7 @@ int cxl_mmio_read32(struct cxl_afu_h *afu, uint64_t offset, uint32_t *data)
 	d = _cxl_mmio_read32(afu, offset);
 	cxl_mmio_success();
 
-	if (d == 0xffffffff)
+	if (d == 0xffffffff && !cxl_afu_link_ok(afu))
 		goto fail;
 
 	*data = d;

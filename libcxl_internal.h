@@ -43,8 +43,18 @@ struct cxl_afu_h {
 	size_t mmio_size;
 	int fd_errbuff; /* fd to the afu_err_buff */
 	size_t errbuff_size;
+
+	/* mapped afu descriptor */
+	int fd_afudesc;
+	__u64 *mmio_afudesc;
 };
 
 int cxl_get_dev(struct cxl_afu_h *afu, long *majorp, long *minorp);
+
+
+/* Init and cleanup functions for mapping afu-desc to process addr space. */
+int cxl_open_afudesc(struct cxl_afu_h *afu);
+
+void cxl_close_afudesc(struct cxl_afu_h *afu);
 
 #endif
