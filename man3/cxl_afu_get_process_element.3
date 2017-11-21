@@ -9,10 +9,10 @@ cxl_afu_get_process_element \- get the process element associated with an open A
 .BI "int cxl_afu_get_process_element(struct cxl_afu_h *" afu );
 .SH DESCRIPTION
 .BR cxl_afu_get_process_element ()
-returns the process element associated with the open
+returns the process element number associated with the open
 .IR afu .
 .SH RETURN VALUE
-On success, 0 is returned.
+On success, the process element number is returned.
 On error, \-1 is returned and
 .I errno
 is set appropriately.
