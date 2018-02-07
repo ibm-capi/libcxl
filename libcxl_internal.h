@@ -43,6 +43,7 @@ struct cxl_afu_h {
 	size_t mmio_size;
 	int fd_errbuff; /* fd to the afu_err_buff */
 	size_t errbuff_size;
+	int tid;
 };
 
 int cxl_get_dev(struct cxl_afu_h *afu, long *majorp, long *minorp);

@@ -38,6 +38,7 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <setjmp.h>
+#include <syscall.h>
 
 #include "libcxl.h"
 #include <misc/cxl.h>
@@ -92,6 +93,7 @@ static struct cxl_afu_h * malloc_afu(void)
 	afu->sysfs_path = NULL;
 	afu->fd_errbuff = -1;
 	afu->errbuff_size = -1;
+	afu->tid = -1;
 
 	return afu;
 }
@@ -625,6 +627,7 @@ int cxl_afu_attach(struct cxl_afu_h *afu, __u64 wed)
 		errno = EINVAL;
 		return -1;
 	}
+	afu->tid = syscall(SYS_gettid);
 
 	memset(&work, 0, sizeof(work));
 	work.work_element_descriptor = wed;
@@ -641,6 +644,7 @@ int cxl_afu_attach_full(struct cxl_afu_h *afu, __u64 wed, __u16 num_interrupts,
 		errno = EINVAL;
 		return -1;
 	}
+	afu->tid = syscall(SYS_gettid);
 
 	memset(&work, 0, sizeof(work));
 	work.work_element_descriptor = wed;
@@ -659,6 +663,8 @@ int cxl_afu_attach_work(struct cxl_afu_h *afu,
 		errno = EINVAL;
 		return -1;
 	}
+	afu->tid = syscall(SYS_gettid);
+
 	return ioctl(afu->fd, CXL_IOCTL_START_WORK, work);
 }
 
@@ -713,6 +719,17 @@ int cxl_work_get_wed(struct cxl_ioctl_start_work *work, __u64 *valp)
 }
 
 inline
+int cxl_work_get_tid(struct cxl_ioctl_start_work *work, __u16 *valp)
+{
+	if (work == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
+	*valp = work->tid;
+	return 0;
+}
+
+inline
 int cxl_work_set_amr(struct cxl_ioctl_start_work *work, __u64 amr)
 {
 	if (work == NULL) {
@@ -750,6 +767,28 @@ int cxl_work_set_wed(struct cxl_ioctl_start_work *work, __u64 wed)
 		return -1;
 	}
 	work->work_element_descriptor = wed;
+	return 0;
+}
+
+inline
+int cxl_work_enable_wait(struct cxl_ioctl_start_work *work)
+{
+	if (work == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
+	work->flags |= CXL_START_WORK_TID;
+	return 0;
+}
+
+inline
+int cxl_work_disable_wait(struct cxl_ioctl_start_work *work)
+{
+	if (work == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
+	work->flags &= ~(CXL_START_WORK_TID);
 	return 0;
 }
 
@@ -1311,4 +1350,21 @@ int cxl_mmio_install_sigbus_handler(void)
 	act.sa_flags = SA_SIGINFO;
 
 	return sigaction(SIGBUS, &act, &cxl_sigbus_old_action);
+}
+
+int cxl_wait_host_thread(struct cxl_afu_h *afu, volatile __u64 *uword)
+{
+	if (afu == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
+	if (afu->tid != syscall(SYS_gettid)) {
+		errno = EPERM;
+		return -1;
+	}
+
+	while (*uword == 0) {
+		asm volatile ("wait");
+	}
+	return 0;
 }
