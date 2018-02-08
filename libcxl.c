@@ -1352,7 +1352,7 @@ int cxl_mmio_install_sigbus_handler(void)
 	return sigaction(SIGBUS, &act, &cxl_sigbus_old_action);
 }
 
-int cxl_wait_host_thread(struct cxl_afu_h *afu, volatile __u64 *uword)
+int cxl_afu_wait_host_thread(struct cxl_afu_h *afu, volatile __u64 *uword)
 {
 	if (afu == NULL) {
 		errno = EINVAL;
