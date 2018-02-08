@@ -265,7 +265,7 @@ ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
  * the afu doesn't exist, -1 is returned and errno is set
  * appropriately.
  */
-int cxl_afu_wait_host_thread(struct cxl_afu_h *afu, volatile __u64 *uword);
+int cxl_afu_host_thread_wait(struct cxl_afu_h *afu, volatile __u64 *uword);
 #endif
 #ifdef __cplusplus
 }

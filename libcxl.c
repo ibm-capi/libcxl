@@ -733,7 +733,7 @@ int cxl_work_get_wed(struct cxl_ioctl_start_work *work, __u64 *valp)
 inline
 int cxl_work_get_tid(struct cxl_ioctl_start_work *work, __u16 *valp)
 {
-	if (work == NULL) {
+	if (work == NULL || work->tid == -1) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -1368,7 +1368,7 @@ int cxl_mmio_install_sigbus_handler(void)
 }
 
 #if defined CXL_START_WORK_TID
-int cxl_afu_wait_host_thread(struct cxl_afu_h *afu, volatile __u64 *uword)
+int cxl_afu_host_thread_wait(struct cxl_afu_h *afu, volatile __u64 *uword)
 {
 	if (afu == NULL) {
 		errno = EINVAL;
