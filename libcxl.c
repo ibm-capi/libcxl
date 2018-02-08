@@ -38,12 +38,15 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <setjmp.h>
-#include <syscall.h>
 
 #include "libcxl.h"
 #include <misc/cxl.h>
 
 #include "libcxl_internal.h"
+
+#if defined CXL_START_WORK_TID
+#include <syscall.h>
+#endif
 
 #undef DEBUG
 
@@ -93,7 +96,9 @@ static struct cxl_afu_h * malloc_afu(void)
 	afu->sysfs_path = NULL;
 	afu->fd_errbuff = -1;
 	afu->errbuff_size = -1;
+#if defined CXL_START_WORK_TID
 	afu->tid = -1;
+#endif
 
 	return afu;
 }
