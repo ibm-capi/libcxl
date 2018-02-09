@@ -44,7 +44,7 @@ struct cxl_afu_h {
 	int fd_errbuff; /* fd to the afu_err_buff */
 	size_t errbuff_size;
 #if defined CXL_START_WORK_TID
-	int tid;
+	int pid;
 #endif
 };
 

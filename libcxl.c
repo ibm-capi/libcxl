@@ -97,7 +97,7 @@ static struct cxl_afu_h * malloc_afu(void)
 	afu->fd_errbuff = -1;
 	afu->errbuff_size = -1;
 #if defined CXL_START_WORK_TID
-	afu->tid = -1;
+	afu->pid = -1;
 #endif
 
 	return afu;
@@ -633,7 +633,8 @@ int cxl_afu_attach(struct cxl_afu_h *afu, __u64 wed)
 		return -1;
 	}
 #if defined CXL_START_WORK_TID
-	afu->tid = syscall(SYS_gettid);
+	/* get the internal kernel "pid" of the Thread ID */
+	afu->pid = syscall(SYS_gettid);
 #endif
 
 	memset(&work, 0, sizeof(work));
@@ -652,7 +653,8 @@ int cxl_afu_attach_full(struct cxl_afu_h *afu, __u64 wed, __u16 num_interrupts,
 		return -1;
 	}
 #if defined CXL_START_WORK_TID
-	afu->tid = syscall(SYS_gettid);
+	/* get the internal kernel "pid" of the Thread ID */
+	afu->pid = syscall(SYS_gettid);
 #endif
 
 	memset(&work, 0, sizeof(work));
@@ -673,7 +675,8 @@ int cxl_afu_attach_work(struct cxl_afu_h *afu,
 		return -1;
 	}
 #if defined CXL_START_WORK_TID
-	afu->tid = syscall(SYS_gettid);
+	/* get the internal kernel "pid" of the Thread ID */
+	afu->pid = syscall(SYS_gettid);
 #endif
 
 	return ioctl(afu->fd, CXL_IOCTL_START_WORK, work);
@@ -1374,7 +1377,7 @@ int cxl_afu_host_thread_wait(struct cxl_afu_h *afu, volatile __u64 *uword)
 		errno = EINVAL;
 		return -1;
 	}
-	if (afu->tid != syscall(SYS_gettid)) {
+	if (afu->pid != syscall(SYS_gettid)) {
 		errno = EPERM;
 		return -1;
 	}
