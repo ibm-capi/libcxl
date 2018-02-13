@@ -1,6 +1,6 @@
-.\" Copyright 2015-2017 IBM Corp.
+.\" Copyright 2015-2018 IBM Corp.
 .\"
-.TH CXL_WORK_ALLOC 3 2017-05-24 "LIBCXL 1.5" "CXL Programmer's Manual"
+.TH CXL_WORK_ALLOC 3 2018-02-13 "LIBCXL 1.5" "CXL Programmer's Manual"
 .SH NAME
 cxl_work_alloc \- allocate and initialize a work structure
 .SH SYNOPSIS
@@ -25,9 +25,12 @@ Not enough memory.
 .SH SEE ALSO
 .BR cxl (3),
 .BR cxl_afu_attach_work (3),
+.BR cxl_work_disable_wait (3),
+.BR cxl_work_enable_wait (3),
 .BR cxl_work_free (3),
 .BR cxl_work_get_amr (3),
 .BR cxl_work_get_num_irqs (3),
+.BR cxl_work_get_tid (3),
 .BR cxl_work_get_wed (3),
 .BR cxl_work_set_amr (3),
 .BR cxl_work_set_num_irqs (3),

@@ -1,6 +1,6 @@
-.\" Copyright 2015-2017 IBM Corp.
+.\" Copyright 2015-2018 IBM Corp.
 .\"
-.TH CXL 3 2017-05-24 "LIBCXL 1.5" "CXL Programmer's Manual"
+.TH CXL 3 2018-02-13 "LIBCXL 1.5" "CXL Programmer's Manual"
 .SH NAME
 cxl \- Coherent Accelerator Interface (CXL) library functions
 .SH SYNOPSIS
@@ -92,6 +92,25 @@ cxl_afu_open_dev	open an AFU by device name
 cxl_afu_open_h	open an AFU by AFU handle
 cxl_afu_opened	return whether an AFU handle is opened
 .TE
+.SS Work Structure Handling functions
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_work_alloc	allocate and initialize a work structure
+cxl_work_disable_wait	indicate that a host thread will not wait
+cxl_work_enable_wait	indicate that a host thread will wait
+cxl_work_free	free a work structure
+cxl_work_get_amr	get the value of the authority mask register
+cxl_work_get_num_irqs	get the number of interrupts requested
+cxl_work_get_tid	get the tid of the thread that will wait
+cxl_work_get_wed	get the value of the work element descriptor
+cxl_work_set_amr	set the value of the authority mask register
+cxl_work_set_num_irqs	set the number of interrupts requested
+cxl_work_set_wed	set the value of the work element descriptor
+.TE
 .SS Attach AFU Context functions
 .TS
 ;
@@ -102,14 +121,15 @@ _
 cxl_afu_attach	attach the calling process's memory to an open AFU
 cxl_afu_attach_full	attach the calling process's memory to an open AFU (Deprecated Interface)
 cxl_afu_attach_work	attach the calling process's memory to an open AFU
-cxl_work_alloc	allocate and initialize a work structure
-cxl_work_free	free a work structure
-cxl_work_get_amr	get the value of the authority mask register
-cxl_work_get_num_irqs	get the number of interrupts requested
-cxl_work_get_wed	get the value of the work element descriptor
-cxl_work_set_amr	set the value of the authority mask register
-cxl_work_set_num_irqs	set the number of interrupts requested
-cxl_work_set_wed	set the value of the work element descriptor
+.TE
+.SS Wait for AFU Notification function
+.TS
+;
+lb lb
+lb l.
+Function	Description
+_
+cxl_afu_host_thread_wait	wait for AFU notification
 .TE
 .SS CXL Adapter Sysfs Helper functions
 .TS
@@ -195,8 +215,8 @@ lb lb
 lb l.
 Function	Description
 _
-cxl_errinfo_size	returns the size of afu_err_buff in bytes
 cxl_errinfo_read	read and copy the contents of afu_err_info buffer into the provided buffer
+cxl_errinfo_size	returns the size of afu_err_buff in bytes
 .TE
 .SH SEE ALSO
 .BR cxl_adapter_afu_next (3),
@@ -206,11 +226,13 @@ cxl_errinfo_read	read and copy the contents of afu_err_info buffer into the prov
 .BR cxl_afu_attach (3),
 .BR cxl_afu_attach_full (3),
 .BR cxl_afu_attach_work (3),
+.BR cxl_afu_attach_work (3),
 .BR cxl_afu_dev_name (3),
 .BR cxl_afu_fd (3),
 .BR cxl_afu_fd_to_h (3),
 .BR cxl_afu_free (3),
 .BR cxl_afu_get_process_element (3),
+.BR cxl_afu_host_thread_wait (3),
 .BR cxl_afu_next (3),
 .BR cxl_afu_open_dev (3),
 .BR cxl_afu_open_h (3),
@@ -245,21 +267,24 @@ cxl_errinfo_read	read and copy the contents of afu_err_info buffer into the prov
 .BR cxl_mmio_install_sigbus_handler (3),
 .BR cxl_mmio_map (3),
 .BR cxl_mmio_ptr (3),
-.BR cxl_mmio_rea (3),2.3
+.BR cxl_mmio_read32 (3),
 .BR cxl_mmio_read64 (3),
 .BR cxl_mmio_unmap (3),
-.BR cxl_mmio_writ (3),2.3
+.BR cxl_mmio_write32 (3),
 .BR cxl_mmio_write64 (3),
 .BR cxl_read_event (3),
 .BR cxl_read_expected_event (3),
 .BR cxl_set_irqs_max (3),
 .BR cxl_set_mode (3),
-.BR cxl_set_prefault_mode, (3)
+.BR cxl_set_prefault_mode (3)
 .BR cxl_work_alloc (3),
-.BR cxl_work_get_amr (3),
-.BR cxl_work_set_amr (3),
-.BR cxl_work_get_num_irqs (3),
-.BR cxl_work_set_num_irqs (3),
+.BR cxl_work_disable_wait (3),
+.BR cxl_work_enable_wait (3),
 .BR cxl_work_free (3),
+.BR cxl_work_get_amr (3),
+.BR cxl_work_get_num_irqs (3),
+.BR cxl_work_get_tid (3),
 .BR cxl_work_get_wed (3),
+.BR cxl_work_set_amr (3),
+.BR cxl_work_set_num_irqs (3),
 .BR cxl_work_set_wed (3)

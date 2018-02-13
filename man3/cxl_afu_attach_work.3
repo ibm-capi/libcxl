@@ -1,6 +1,6 @@
-.\" Copyright 2015-2017 IBM Corp.
+.\" Copyright 2015-2018 IBM Corp.
 .\"
-.TH CXL_AFU_ATTACH_WORK 3 2017-05-24 "LIBCXL 1.5" "CXL Programmer's Manual"
+.TH CXL_AFU_ATTACH_WORK 3 2018-02-13 "LIBCXL 1.5" "CXL Programmer's Manual"
 .SH NAME
 cxl_afu_attach_work \- attach the calling process's memory to an open AFU
 .SH SYNOPSIS
@@ -22,7 +22,7 @@ No additional calls are required to map/unmap memory.
 The AFU memory context will be updated as userspace allocates and
 frees memory.
 .PP
-Three parameters can be set in the
+Four parameters can be set in the
 .I work
 structure:
 .PP
@@ -47,6 +47,11 @@ by an AFU context, returned by
 sets the authority mask register (same as the powerpc AMR).
 A null value indicates that the authority mask register
 should not be set.
+.PP
+.BR cxl_work_enable_wait()
+indicates that the thread that will attach an AFU context
+requires to be able to wait and be notified by the AFU with
+.BR cxl_afu_host_thread_wait ().
 .SH RETURN VALUE
 On success, 0 is returned.
 On error, \-1 is returned and
@@ -63,25 +68,29 @@ Not enough memory.
 .B ENOSPC
 Not enough interrupts available.
 .SH SEE ALSO
-.BR cxl (),
-.BR cxl_afu_attach (),
-.BR cxl_afu_attach_full (),
-.BR cxl_afu_fd_to_h (),
-.BR cxl_afu_free (),
-.BR cxl_afu_open_dev (),
-.BR cxl_afu_opened (),
-.BR cxl_get_irqs_max (),
-.BR cxl_get_irqs_min (),
-.BR cxl_get_prefault_mode (),
-.BR cxl_mmio_map (),
-.BR cxl_set_irqs_max (),
-.BR cxl_set_mode (),
-.BR cxl_set_prefault_mode (),
-.BR cxl_work_alloc (),
-.BR cxl_work_free (),
-.BR cxl_work_get_amr (),
-.BR cxl_work_get_num_irqs (),
-.BR cxl_work_get_wed (),
-.BR cxl_work_set_amr (),
-.BR cxl_work_set_num_irqs (),
-.BR cxl_work_set_wed ()
+.BR cxl (3),
+.BR cxl_afu_attach (3),
+.BR cxl_afu_attach_full (3),
+.BR cxl_afu_fd_to_h (3),
+.BR cxl_afu_free (3),
+.BR cxl_afu_host_thread_wait(3),
+.BR cxl_afu_open_dev (3),
+.BR cxl_afu_opened (3),
+.BR cxl_get_irqs_max (3),
+.BR cxl_get_irqs_min (3),
+.BR cxl_get_prefault_mode (3),
+.BR cxl_mmio_map (3),
+.BR cxl_set_irqs_max (3),
+.BR cxl_set_mode (3),
+.BR cxl_set_prefault_mode (3),
+.BR cxl_work_alloc (3),
+.BR cxl_work_disable_wait (3),
+.BR cxl_work_enable_wait (3),
+.BR cxl_work_free (3),
+.BR cxl_work_get_amr (3),
+.BR cxl_work_get_num_irqs (3),
+.BR cxl_work_get_tid (3),
+.BR cxl_work_get_wed (3),
+.BR cxl_work_set_amr (3),
+.BR cxl_work_set_num_irqs (3),
+.BR cxl_work_set_wed (3)

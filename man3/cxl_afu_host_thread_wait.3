@@ -1,0 +1,54 @@
+.\" Copyright 2018 IBM Corp.
+.\"
+.TH CXL_AFU_HOST_THREAD_WAIT 3 2018-02-13 "LIBCXL 1.5" "CXL Manual"
+.SH NAME
+cxl_afu_host_thread_wait \- wait for AFU notification
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int afu_host_thread_wait(struct cxl_afu_h"
+.BI * afu ", volatile __u64 *" uword );
+.SH DESCRIPTION
+The thread calling
+.BR afu_host_thread_wait ()
+executes the instruction "wait" and goes to sleep.
+It will resume execution upon receiving an interrupt or an
+.I afu
+notification. It will then check the value
+of the shared memory word pointed to by
+.IR uword .
+The thread will loop and sleep again while the value of
+.I uword
+is equal to zero. It will return from
+.BR afu_host_thread_wait ()
+when the value of
+.I uword
+becomes different from zero.
+.PP
+The thread calling
+.BR afu_host_thread_wait ()
+must have attached an
+.I afu
+context to a work structure with
+.BR cxl_afu_attach_work ()
+The work structure must have been wait-enabled with
+.BR cxl_work_enable_wait ().
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value
+.TP
+.B EPERM
+AFU context not attached by current thread, or wait not enabled
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_attach_work (3),
+.BR cxl_afu_host_thread_wait (3),
+.BR cxl_work_disable_wait (3),
+.BR cxl_work_enable_wait (3),
+.BR cxl_work_get_tid (3)

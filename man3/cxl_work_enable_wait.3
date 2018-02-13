@@ -1,0 +1,36 @@
+.\" Copyright 2018 IBM Corp.
+.\"
+.TH CXL_WORK_ENABLE_WAIT 3 2018-02-13 "LIBCXL 1.5" "CXL Programmer's Manual"
+.SH NAME
+cxl_work_enable_wait \- indicate that a host thread will wait
+.SH SYNOPSIS
+.B #include <libcxl.h>
+.PP
+.B "int cxl_work_enable_wait(struct cxl_ioctl_start_work"
+.BI * work );
+.SH DESCRIPTION
+.BR cxl_work_enable_wait ()
+indicates in the
+.I work
+structure allocated by
+.BR cxl_work_alloc (),
+that the thread that will attach an AFU context with
+.BR cxl_afu_attach_work ()
+requires to be able to wait and be notified by the AFU with
+.BR cxl_afu_host_thread_wait ().
+.SH RETURN VALUE
+On success, 0 is returned.
+On error, \-1 is returned and
+.I errno
+is set appropriately.
+.SH ERRORS
+.TP
+.B EINVAL
+Invalid argument value.
+.SH SEE ALSO
+.BR cxl (3),
+.BR cxl_afu_attach_work (3),
+.BR cxl_afu_host_thread_wait (3),
+.BR cxl_work_alloc (3),
+.BR cxl_work_disable_wait (3),
+.BR cxl_work_get_tid (3)
