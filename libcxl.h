@@ -256,10 +256,9 @@ ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
 
 #if defined CXL_START_WORK_TID
 /**
- * Loop used to re-wait the current thread (which has attached the work)
- * after a spurious wake-up.
- * The loop should exit only when, after waking, the shared memory
- * has changed.
+ * Execute the instruction "wait" while the value of the shared
+ * memory (uworld) has not changed. Only the current thread, which has
+ * attached the work, may be asleep.
  * @param uworld Pointer to the shared memory to exit from the loop.
  * @return In case of success '0' is returned. In case of an error or
  * the afu doesn't exist, -1 is returned and errno is set
