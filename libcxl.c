@@ -44,6 +44,10 @@
 
 #include "libcxl_internal.h"
 
+#if defined CXL_START_WORK_TID
+#include <syscall.h>
+#endif
+
 #undef DEBUG
 
 #ifdef DEBUG
@@ -92,6 +96,9 @@ static struct cxl_afu_h * malloc_afu(void)
 	afu->sysfs_path = NULL;
 	afu->fd_errbuff = -1;
 	afu->errbuff_size = -1;
+#if defined CXL_START_WORK_TID
+	afu->pid = -1;
+#endif
 
 	return afu;
 }
@@ -625,6 +632,10 @@ int cxl_afu_attach(struct cxl_afu_h *afu, __u64 wed)
 		errno = EINVAL;
 		return -1;
 	}
+#if defined CXL_START_WORK_TID
+	/* get the internal kernel "pid" of the Thread ID */
+	afu->pid = syscall(SYS_gettid);
+#endif
 
 	memset(&work, 0, sizeof(work));
 	work.work_element_descriptor = wed;
@@ -641,6 +652,10 @@ int cxl_afu_attach_full(struct cxl_afu_h *afu, __u64 wed, __u16 num_interrupts,
 		errno = EINVAL;
 		return -1;
 	}
+#if defined CXL_START_WORK_TID
+	/* get the internal kernel "pid" of the Thread ID */
+	afu->pid = syscall(SYS_gettid);
+#endif
 
 	memset(&work, 0, sizeof(work));
 	work.work_element_descriptor = wed;
@@ -659,6 +674,11 @@ int cxl_afu_attach_work(struct cxl_afu_h *afu,
 		errno = EINVAL;
 		return -1;
 	}
+#if defined CXL_START_WORK_TID
+	/* get the internal kernel "pid" of the Thread ID */
+	afu->pid = syscall(SYS_gettid);
+#endif
+
 	return ioctl(afu->fd, CXL_IOCTL_START_WORK, work);
 }
 
@@ -712,6 +732,19 @@ int cxl_work_get_wed(struct cxl_ioctl_start_work *work, __u64 *valp)
 	return 0;
 }
 
+#if defined CXL_START_WORK_TID
+inline
+int cxl_work_get_tid(struct cxl_ioctl_start_work *work, __u16 *valp)
+{
+	if (work == NULL || work->tid == -1) {
+		errno = EINVAL;
+		return -1;
+	}
+	*valp = work->tid;
+	return 0;
+}
+#endif
+
 inline
 int cxl_work_set_amr(struct cxl_ioctl_start_work *work, __u64 amr)
 {
@@ -752,6 +785,30 @@ int cxl_work_set_wed(struct cxl_ioctl_start_work *work, __u64 wed)
 	work->work_element_descriptor = wed;
 	return 0;
 }
+
+#if defined CXL_START_WORK_TID
+inline
+int cxl_work_enable_wait(struct cxl_ioctl_start_work *work)
+{
+	if (work == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
+	work->flags |= CXL_START_WORK_TID;
+	return 0;
+}
+
+inline
+int cxl_work_disable_wait(struct cxl_ioctl_start_work *work)
+{
+	if (work == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
+	work->flags &= ~(CXL_START_WORK_TID);
+	return 0;
+}
+#endif
 
 /*
  * Event description print helpers
@@ -1312,3 +1369,22 @@ int cxl_mmio_install_sigbus_handler(void)
 
 	return sigaction(SIGBUS, &act, &cxl_sigbus_old_action);
 }
+
+#if defined CXL_START_WORK_TID
+int cxl_afu_host_thread_wait(struct cxl_afu_h *afu, volatile __u64 *uword)
+{
+	if (afu == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
+	if (afu->pid != syscall(SYS_gettid)) {
+		errno = EPERM;
+		return -1;
+	}
+
+	while (*uword == 0) {
+		asm volatile ("wait");
+	}
+	return 0;
+}
+#endif

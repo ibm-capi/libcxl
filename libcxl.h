@@ -103,6 +103,11 @@ int cxl_work_get_wed(struct cxl_ioctl_start_work *work, __u64 *valp);
 int cxl_work_set_amr(struct cxl_ioctl_start_work *work, __u64 amr);
 int cxl_work_set_num_irqs(struct cxl_ioctl_start_work *work, __s16 num_irqs);
 int cxl_work_set_wed(struct cxl_ioctl_start_work *work, __u64 wed);
+#if defined CXL_START_WORK_TID
+int cxl_work_get_tid(struct cxl_ioctl_start_work *work, __u16 *valp);
+int cxl_work_enable_wait(struct cxl_ioctl_start_work *work);
+int cxl_work_disable_wait(struct cxl_ioctl_start_work *work);
+#endif
 
 int cxl_afu_attach(struct cxl_afu_h *afu, __u64 wed);
 int cxl_afu_attach_work(struct cxl_afu_h *afu,
@@ -247,6 +252,20 @@ int cxl_errinfo_size(struct cxl_afu_h *afu, size_t *valp);
  */
 ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
 			 size_t len);
+
+
+#if defined CXL_START_WORK_TID
+/**
+ * Execute the instruction "wait" while the value of the shared
+ * memory (uworld) has not changed. Only the current thread, which has
+ * attached the work, may be asleep.
+ * @param uworld Pointer to the shared memory to exit from the loop.
+ * @return In case of success '0' is returned. In case of an error or
+ * the afu doesn't exist, -1 is returned and errno is set
+ * appropriately.
+ */
+int cxl_afu_host_thread_wait(struct cxl_afu_h *afu, volatile __u64 *uword);
+#endif
 #ifdef __cplusplus
 }
 #endif
