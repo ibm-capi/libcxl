@@ -38,6 +38,7 @@
 #include <sys/wait.h>
 #include <sys/mman.h>
 #include <setjmp.h>
+#include <sys/sysmacros.h>
 
 #include "libcxl.h"
 #include <misc/cxl.h>
