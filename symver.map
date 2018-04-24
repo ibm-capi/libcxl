@@ -90,3 +90,11 @@ LIBCXL_1.4 {
 	global:
 		cxl_get_psl_timebase_synced;
 } LIBCXL_1.2;
+
+LIBCXL_1.6 {
+	global:
+		cxl_afu_host_thread_wait;
+		cxl_work_disable_wait;
+		cxl_work_enable_wait;
+		cxl_work_get_tid;
+} LIBCXL_1.4;

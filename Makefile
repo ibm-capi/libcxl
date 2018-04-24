@@ -5,7 +5,7 @@ OBJS = libcxl.o libcxl_sysfs.o
 CFLAGS += -I include
 
 # change VERS_LIB if new git tag
-VERS_LIB = 1.5
+VERS_LIB = 1.6
 LIBNAME   = libcxl.so.$(VERS_LIB)
 # change VERS_SONAME only if library breaks backward compatibility.
 # refer to file symver.map
@@ -19,8 +19,8 @@ HAS_WGET = $(shell /bin/which wget > /dev/null 2>&1 && echo y || echo n)
 HAS_CURL = $(shell /bin/which curl > /dev/null 2>&1 && echo y || echo n)
 
 # Update this to test a single feature from the most recent header we require:
-CHECK_CXL_HEADER_IS_UP_TO_DATE = $(shell /bin/echo -e \\\#include $(1)\\\nvoid test\(struct cxl_afu_id test\)\; | \
-                 $(CC) $(CFLAGS) -Werror -x c -S -o /dev/null - > /dev/null 2>&1 && echo y || echo n)
+CHECK_CXL_HEADER_IS_UP_TO_DATE = $(shell /bin/echo -e \\\#include $(1)\\\nint i = CXL_START_WORK_TID\; | \
+                 $(CC) $(CFLAGS) -Werror -x c -S -o /dev/null - >/dev/null 2>&1 && echo y || echo n)
 
 check_cxl_header:
 ifeq ($(call CHECK_CXL_HEADER_IS_UP_TO_DATE,"<misc/cxl.h>"),n)
