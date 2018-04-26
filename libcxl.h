@@ -182,6 +182,7 @@ int cxl_get_caia_version(struct cxl_adapter_h *adapter, long *majorp,
 int cxl_get_image_loaded(struct cxl_adapter_h *adapter, enum cxl_image *valp);
 int cxl_get_psl_revision(struct cxl_adapter_h *adapter, long *valp);
 int cxl_get_psl_timebase_synced(struct cxl_adapter_h *adapter, long *valp);
+int cxl_get_tunneled_ops_supported(struct cxl_adapter_h *adapter, long *valp);
 
 /*
  * Events
@@ -257,9 +258,9 @@ ssize_t cxl_errinfo_read(struct cxl_afu_h *afu, void *dst, off_t off,
 #if defined CXL_START_WORK_TID
 /**
  * Execute the instruction "wait" while the value of the shared
- * memory (uworld) has not changed. Only the current thread, which has
+ * memory (uword) has not changed. Only the current thread, which has
  * attached the work, may be asleep.
- * @param uworld Pointer to the shared memory to exit from the loop.
+ * @param uword Pointer to the shared memory to exit from the loop.
  * @return In case of success '0' is returned. In case of an error or
  * the afu doesn't exist, -1 is returned and errno is set
  * appropriately.

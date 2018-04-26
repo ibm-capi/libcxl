@@ -5,7 +5,7 @@ OBJS = libcxl.o libcxl_sysfs.o
 CFLAGS += -I include
 
 # change VERS_LIB if new git tag
-VERS_LIB = 1.6
+VERS_LIB = 1.7
 LIBNAME   = libcxl.so.$(VERS_LIB)
 # change VERS_SONAME only if library breaks backward compatibility.
 # refer to file symver.map

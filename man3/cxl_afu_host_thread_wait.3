@@ -9,6 +9,9 @@ cxl_afu_host_thread_wait \- wait for AFU notification
 .B "int afu_host_thread_wait(struct cxl_afu_h"
 .BI * afu ", volatile __u64 *" uword );
 .SH DESCRIPTION
+The tunneled operation as_notify is supported on POWER9. See
+.BR cxl_get_tunneled_ops_supported ().
+.PP
 The thread calling
 .BR afu_host_thread_wait ()
 executes the instruction "wait" and goes to sleep.
@@ -49,6 +52,7 @@ AFU context not attached by current thread, or wait not enabled
 .BR cxl (3),
 .BR cxl_afu_attach_work (3),
 .BR cxl_afu_host_thread_wait (3),
+.BR cxl_get_tunneled_ops_supported (3),
 .BR cxl_work_disable_wait (3),
 .BR cxl_work_enable_wait (3),
 .BR cxl_work_get_tid (3)

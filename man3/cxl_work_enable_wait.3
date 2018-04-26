@@ -9,6 +9,9 @@ cxl_work_enable_wait \- indicate that a host thread will wait
 .B "int cxl_work_enable_wait(struct cxl_ioctl_start_work"
 .BI * work );
 .SH DESCRIPTION
+The tunneled operation as_notify is supported on POWER9. See
+.BR cxl_get_tunneled_ops_supported ().
+.PP
 .BR cxl_work_enable_wait ()
 indicates in the
 .I work
@@ -31,6 +34,7 @@ Invalid argument value.
 .BR cxl (3),
 .BR cxl_afu_attach_work (3),
 .BR cxl_afu_host_thread_wait (3),
+.BR cxl_get_tunneled_ops_supported (3),
 .BR cxl_work_alloc (3),
 .BR cxl_work_disable_wait (3),
 .BR cxl_work_get_tid (3)

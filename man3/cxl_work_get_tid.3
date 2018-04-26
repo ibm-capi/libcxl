@@ -9,6 +9,9 @@ cxl_work_get_tid \- get the tid of the thread that will wait
 .B "int cxl_work_get_tid(struct cxl_ioctl_start_work"
 .BI * work ", __u16 *" valp );
 .SH DESCRIPTION
+The tunneled operation as_notify is supported on POWER9. See
+.BR cxl_get_tunneled_ops_supported ().
+.PP
 .BR cxl_work_get_tid ()
 copies to the address pointed to by
 .I valp
@@ -39,6 +42,7 @@ Invalid argument value, or AFU context not attached, or wait not enabled
 .BR cxl (3),
 .BR cxl_afu_attach_work (3),
 .BR cxl_afu_host_thread_wait (3),
+.BR cxl_get_tunneled_ops_supported (3),
 .BR cxl_work_disable_wait (3),
 .BR cxl_work_enable_wait (3),
 .BR gettid(2)
