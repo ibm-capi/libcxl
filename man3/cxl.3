@@ -1,6 +1,6 @@
 .\" Copyright 2015-2018 IBM Corp.
 .\"
-.TH CXL 3 2018-04-24 "LIBCXL 1.6" "CXL Programmer's Manual"
+.TH CXL 3 2018-04-26 "LIBCXL 1.7" "CXL Programmer's Manual"
 .SH NAME
 cxl \- Coherent Accelerator Interface (CXL) library functions
 .SH SYNOPSIS
@@ -142,6 +142,8 @@ cxl_get_base_image	get the revision level of the initial PSL image loaded on the
 cxl_get_caia_version	get the CAIA version supported by a CXL adapter
 cxl_get_image_loaded	returns which of the user and factory PSL images is currently loaded on the CXL device
 cxl_get_psl_revision	get the revision level of the current PSL image loaded on the CXL device
+cxl_get_psl_timebase_synced	get the status of timebase on the CXL device
+cxl_get_tunneled_ops_supported	get the status of tunneled operations on the CXL device
 .TE
 .SS AFU Directed Master Context Sysfs Helper functions
 .TS
@@ -264,6 +266,7 @@ cxl_errinfo_size	returns the size of afu_err_buff in bytes
 .BR cxl_get_prefault_mode (3),
 .BR cxl_get_psl_revision (3),
 .BR cxl_get_psl_timebase_synced (3),
+.BR cxl_get_tunneled_ops_supported (3),
 .BR cxl_mmio_install_sigbus_handler (3),
 .BR cxl_mmio_map (3),
 .BR cxl_mmio_ptr (3),

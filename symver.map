@@ -98,3 +98,8 @@ LIBCXL_1.6 {
 		cxl_work_enable_wait;
 		cxl_work_get_tid;
 } LIBCXL_1.4;
+
+LIBCXL_1.7 {
+	global:
+		cxl_get_tunneled_ops_supported;
+} LIBCXL_1.6;
