@@ -6,14 +6,14 @@ cxl_afu_host_thread_wait \- wait for AFU notification
 .SH SYNOPSIS
 .B #include <libcxl.h>
 .PP
-.B "int afu_host_thread_wait(struct cxl_afu_h"
+.B "int cxl_afu_host_thread_wait(struct cxl_afu_h"
 .BI * afu ", volatile __u64 *" uword );
 .SH DESCRIPTION
 The tunneled operation as_notify is supported on POWER9. See
 .BR cxl_get_tunneled_ops_supported ().
 .PP
 The thread calling
-.BR afu_host_thread_wait ()
+.BR cxl_afu_host_thread_wait ()
 executes the instruction "wait" and goes to sleep.
 It will resume execution upon receiving an interrupt or an
 .I afu
@@ -23,13 +23,13 @@ of the shared memory word pointed to by
 The thread will loop and sleep again while the value of
 .I uword
 is equal to zero. It will return from
-.BR afu_host_thread_wait ()
+.BR cxl_afu_host_thread_wait ()
 when the value of
 .I uword
 becomes different from zero.
 .PP
 The thread calling
-.BR afu_host_thread_wait ()
+.BR cxl_afu_host_thread_wait ()
 must have attached an
 .I afu
 context to a work structure with
