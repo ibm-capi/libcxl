@@ -50,8 +50,14 @@ On error, \-1 is returned and
 is set appropriately.
 .SH ERRORS
 .TP
+.B EBUSY
+Process Element Command timeout.
+.TP
 .B EINVAL
 Invalid argument value, or AFU not opened.
+.TP
+.B EIO
+Device link down.
 .TP
 .B ENOMEM
 Not enough memory.
