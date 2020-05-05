@@ -19,4 +19,4 @@ specific Work Element Descriptors (WEDs), can be submitted and executed by
 AFUs. AFU MMIO space can be mapped into the current process memory, and AFUs
 can be configured and controlled via MMIO reads and writes.
 
-[1]: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/Documentation/powerpc/cxl.txt
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/powerpc/cxl.rst
