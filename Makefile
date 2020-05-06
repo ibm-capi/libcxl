@@ -26,11 +26,11 @@ check_cxl_header:
 ifeq ($(call CHECK_CXL_HEADER_IS_UP_TO_DATE,"<misc/cxl.h>"),n)
 	mkdir -p include/misc
 ifeq (${HAS_WGET},y)
-	$(call Q,WGET include/misc/cxl.h, wget -O include/misc/cxl.h -q http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h)
+	$(call Q,WGET include/misc/cxl.h, wget -O include/misc/cxl.h -q https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h)
 else ifeq (${HAS_CURL},y)
-	$(call Q,CURL include/misc/cxl.h, curl -o include/misc/cxl.h -s http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h)
+	$(call Q,CURL include/misc/cxl.h, curl -o include/misc/cxl.h -s https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h)
 else
-	$(error 'cxl.h is non-existant or out of date, Download from http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h and place in ${PWD}/include/misc/cxl.h')
+	$(error 'cxl.h is non-existant or out of date, Download from https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/include/uapi/misc/cxl.h and place in ${PWD}/include/misc/cxl.h')
 endif
 endif
 
